@@ -33,7 +33,6 @@ def generateMapAPITwo(locations):
 #generateMapAPI()
 generateMapAPITwo(["david kinley", "grainger library", "isr", "far"])
 
-
 # add all the distances in order – from location 1-2, 2-3, 3-4 and so on 
 # return the total distance between these points 
 # create d function which takes in two lists of locations and outputs whichever has min total distance  
