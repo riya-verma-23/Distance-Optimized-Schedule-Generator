@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+.mx-width{
+    max-width: 1300px;
+    padding: 0 80px;
+    margin: auto
+}
+
+/* Title styling */
+
+.title{
+    width: 100%;
+    padding: 30px 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.title h1{
+    font-size: 30px;
+    font-weight: 300;
+    text-align: center;
+    color: #e7c819;
+}
+
+/* Map Styling */
+
+.google-maps{
+    width: 100%;
+}
+
+/* figure out background */
+
+.google-maps .map, iframe{
+    width: 700px;
+    height: 500px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Buttons Styling */
+
+.buttons{
+    width: 100%;
+    padding: 80px 0;
+}
+
+.buttons .max-width {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.buttons ul{
+    margin: 0 auto;
+}
+
+.buttons .inputs li {
+    list-style: none;
+    display: inline-block;
+}
+
+.buttons .inputs li a {
+    display: inline-block;
+    color: black;
+    background: #ffae00;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 10px 30px;
+    margin-left: 40px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.buttons .inputs li a:hover{
+    transform: scale(1.05);
+    border: 2px solid #ffae00 ;
+    background: none;
+}
+
+/* Schedule Section styling */
+
+.schedule{
+    width: 100%;
+    padding: 80px 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.schedule .max-width {
+    display: inline-block;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.schedule p{
+    padding: 0px 0px 50px 80px;
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.schedule table, th, td {
+    border: 1px solid white;
+}
+
+.schedule table{
+    padding: 0px 0px 0px 80px;
+}
+
+.schedule th{
+    background: #ffce74;
+    padding: 10px 70px;
+    color: whitesmoke;
+}
+
+.schedule td{
+    background: #00c3ff63;
+    padding: 10px 70px;
+}
+
+
