@@ -1,1 +1,2 @@
-/Django/TestApp/**
+Django/TestApp/**
+.DS_STORE

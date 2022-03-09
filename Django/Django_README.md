@@ -28,5 +28,15 @@ python manage.py runserver
 ```
 will give you a list of commands 'manage.py' can run
 
+## Testing:
+
+We will be using Django to write unit tests for our code. Since there is no module for writing unit tests for HTML and CSS, the front-end components of the project can be 'tested' by running 
+
+```
+python manage.py runserver
+```
+
+and opening the generated link in any browser.
+
 ### Note: 
 Django requires you to set up a virtiual env to run it. Please look at 'Virtual Environment Setup.md' for a setup assistance.
