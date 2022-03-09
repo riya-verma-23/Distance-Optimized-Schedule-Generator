@@ -5,6 +5,7 @@ from django.shortcuts import render
 # frontend_components is a dictionary of parameters that have to be
 # displayed on the homepage that should be recived from the backend
 
+# Restrict API key
 frontend_components = {
     'maps_link': 'https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJf5sYMRrXDIgRv9cFI6s4og8&destination=place_id:ChIJqXmEqmvXDIgRMJY1DdQBn04&key=AIzaSyC5EWe12L9MWFK0Um6aRdVkZd6eMETlNnY',
     'class_1': 'CS 225',
@@ -26,4 +27,7 @@ frontend_components = {
 
 
 def homepage(request):
+    if request.method == "POST":
+        print(request.POST)  # Printing out the user input from the Front End
+    # rendring the HTML and CSS files for the homepage
     return render(request, 'homepage.html', frontend_components)

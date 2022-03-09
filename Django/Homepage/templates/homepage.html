@@ -30,14 +30,24 @@
 
     <!-- Class Inputs -->
 
-    <section class="buttons" id="buttons">
+    <section class="inputs" id="inputs">
         <div class="max-width">
-            <ul class="Inputs">
-                <li><a>Insert CRN's</a></li>
-                <li><a>Insert &lt3 locations</a></li>
-                <li><a>Insert Prof/TAs</a></li>
-                <!-- Redirect to add inputs on a subdomain -->
-            </ul>
+            <form action="." method="POST">
+                {% csrf_token %}
+                <div>
+                    <label for="crn">CRN</label>
+                    <input type="number" name="crn" id="crn" placeholder="31187" required>
+                </div>
+                <div>
+                    <label for="location">Location</label>
+                    <input type="text" name="location" id="location" placeholder="CIF">
+                </div>
+                <div>
+                    <label for="instructor">Proffesor/TA</label>
+                    <input type="text" name="instructor" id="instructor" placeholder="Benjamin Cosman">
+                </div>
+                <button type="submit">Submit</button>
+            </form>
         </div>
     </section>
 
