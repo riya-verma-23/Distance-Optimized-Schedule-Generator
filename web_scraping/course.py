@@ -38,7 +38,7 @@ class Course:
       raise ValueError
      
     
-  Class LinkedSection:
+  class LinkedSection:
     # linked sections
     self.sections = []
       
