@@ -20,7 +20,7 @@ class Course:
       raise ValueError
   
   # Init the sections dictionary using each course's XML file
-  def get_sections(self):
+  def init_sections(self):
     soup = BeautifulSoup(self.page, "lxml-xml")
     self.sections = {}
     for section in soup.findAll("section"):
