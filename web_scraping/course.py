@@ -36,3 +36,12 @@ class Course:
     # if user forgot subject, number, or class unavailable in given semester, throw exception
     except:
       raise ValueError
+     
+    
+  Class LinkedSection:
+    # linked sections
+    self.sections = []
+      
+    # returns section at index i (can be called with [])
+    def __getitem__(self, index):
+      return sections[index]
