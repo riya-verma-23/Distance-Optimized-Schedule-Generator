@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 import re
 import requests
+import datetime
+
 
 class Section:
   '''
@@ -21,7 +23,7 @@ class Section:
   def __init__(self, name, section_path, course):
     self.course = course.subject + course.num
     self.name = name
-    self.get_location(section_path)
+    self.init_location(section_path)
   
   # Initialize location, section type, meeting days, and start and end time
   # from Section XML file
