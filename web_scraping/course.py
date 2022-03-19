@@ -1,4 +1,7 @@
-import section
+from bs4 import BeautifulSoup
+from section import Section
+import re
+import requests
 
 class Course:
   '''
@@ -32,16 +35,18 @@ class Course:
       self.subject = re.findall('\D+', course_num)[0]
       self.num = re.findall('\d+', course_num)[0]
       self.get_page(semester, year)
-      self.get_sections()
+      self.init_sections()
     # if user forgot subject, number, or class unavailable in given semester, throw exception
     except:
       raise ValueError
      
     
   class LinkedSection:
-    # linked sections
-    self.sections = []
-      
+    
+    def __init__(self):
+        # linked sections
+        self.sections = []
+
     # returns section at index i (can be called with [])
     def __getitem__(self, index):
-      return sections[index]
+      return self.sections[index]
