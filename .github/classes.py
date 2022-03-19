@@ -37,11 +37,3 @@ class Section:
         # whether linked with another section?
         pass
 
-class Schedule
-    def __init__(self, score_, linked_sections_):
-        self.score = score_
-        self.linked_sections = linked_sections_
-    
-
-def isValidSchedule():
-     #checks for time conflicts for linked sections across classes
