@@ -1,6 +1,7 @@
 import requests
 import json
 from array import *
+import distances
 from distances import *
 
 # #API KEY

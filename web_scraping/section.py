@@ -25,6 +25,10 @@ class Section:
     self.name = name
     self.init_location(section_path)
   
+  #equal operator for section objects
+  def __eq__(self, other):
+    return (self.course == other.course) and (self.name == other.name)
+  
   # Initialize location, section type, meeting days, and start and end time
   # from Section XML file
   def init_location(self, section_path):
