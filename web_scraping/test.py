@@ -1,4 +1,4 @@
-import course
+from course import Course
 
 def test_course():
   math241 = Course("spring", "2022", "MATH241")
