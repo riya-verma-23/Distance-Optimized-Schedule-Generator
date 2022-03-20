@@ -23,17 +23,23 @@
         <div class="max-width">
             <form action="." method="POST">
                 {% csrf_token %}
-                <div>
-                    <label for="crn">CRN</label>
-                    <input type="number" name="crn" id="crn" placeholder="31187" required>
+                <div class="card">
+                    <div class="text-box">
+                        <label for="crn">CRN:</label>
+                        <input type="number" name="crn" id="crn" required>
+                    </div>
                 </div>
-                <div>
-                    <label for="location">Location</label>
-                    <input type="text" name="location" id="location" placeholder="CIF">
+                <div class="card">
+                    <div class="text-box">
+                        <label for="location">Location:</label>
+                        <input type="text" name="location" id="location">
+                    </div>
                 </div>
-                <div>
-                    <label for="instructor">Proffesor/TA</label>
-                    <input type="text" name="instructor" id="instructor" placeholder="Benjamin Cosman">
+                <div class="card">
+                    <div class="text-box">
+                        <label for="instructor">Proffesor/TA:</label>
+                        <input type="text" name="instructor" id="instructor">
+                    </div>
                 </div>
                 <button type="submit">Submit</button>
             </form>

@@ -22,6 +22,7 @@ html{
     width: 100%;
     padding: 30px 0;
     font-family: 'Montserrat', sans-serif;
+    margin-bottom: 40px;
 }
 
 .title h1{
@@ -31,61 +32,50 @@ html{
     color: #e7c819;
 }
 
-/* Map Styling */
+/* Class Inputs styling */
 
-.google-maps{
-    width: 100%;
+.inputs{
+    padding-left: 40px;
 }
 
-/* figure out background */
-
-.google-maps .map, iframe{
-    width: 700px;
-    height: 500px;
-    display: block;
-    margin: 0 auto;
-}
-
-/* Buttons Styling */
-
-/* .buttons{
-    width: 100%;
-    padding: 80px 0;
-}
-
-.buttons .max-width {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.buttons ul{
-    margin: 0 auto;
-}
-
-.buttons .inputs li {
-    list-style: none;
+.inputs .card{
     display: inline-block;
+    width: calc(33%);
+    margin-bottom: 30px;
 }
 
-.buttons .inputs li a {
-    display: inline-block;
-    color: black;
-    background: #ffae00;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 18px;
-    font-weight: 500;
-    padding: 10px 30px;
-    margin-left: 40px;
+.inputs .card .text-box{
+    width: 80%;
     border-radius: 20px;
+    background: #ffac12;
+    padding: 10px 0px 10px 40px;
     transition: all 0.3s ease;
 }
 
-.buttons .inputs li a:hover{
+.inputs .card .text-box:hover{
     transform: scale(1.05);
-    border: 2px solid #ffae00 ;
+}
+
+.inputs .card .text-box input{
+    border: none;
+    background: #ffac12;
+}
+
+.inputs button{
+    margin-left: 45%;
+    height: 25px;
+    width: 100px;
+    border: none;
+    border-radius: 8px;
+    background: #ffac12;
+    transition: all 0.3s ease;
+}
+
+.inputs button:hover{
+    transform: scale(1.05);
     background: none;
-} */
+    color: #ffac12;
+}
 
 /* Schedule Section styling */
 
@@ -102,7 +92,7 @@ html{
 }
 
 .schedule p{
-    padding: 0px 0px 50px 80px;
+    padding: 0px 0px 50px 40px;
     font-size: 30px;
     font-weight: 400;
 }
@@ -124,4 +114,18 @@ html{
 .schedule td{
     background: #00c3ff63;
     padding: 10px 70px;
+}
+
+/* Map Styling */
+
+.schedule .card{
+    width: 100%;
+}
+
+
+.schedule .card .map .map, iframe{
+    width: 700px;
+    height: 500px;
+    display: block;
+    margin: 0 auto;
 }
