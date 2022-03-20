@@ -77,6 +77,15 @@ class Course:
 
     return False
   
+  # check if all sections in list are linked by checking first chars
+  # e.g. linked([ADA, AL2]) --> True
+  #      linked([ADA, BL1]) --> False
+  def linked(self, section_list):
+    for i in section_list:
+      if i.get_name()[0] != section_list[0].get_name()[0]:
+        return False
+    return True
+
   # gets list of all possible groups of linked sections 
   # (just the required e.g. lab, discussion, lecture) 
   # ex. {...{section discussion, section lecture, section lab}...}
@@ -90,7 +99,7 @@ class Course:
     combos = it.product(*(sections_by_type[section_name] for section_name in sorted_sections))
 
     for combo in combos:
-      if not self.has_time_conflict(combo):
+      if (not self.has_time_conflict(combo)) and self.linked(combo):
         linked_sections.append(self.LinkedSection(combo))
     
     return linked_sections
