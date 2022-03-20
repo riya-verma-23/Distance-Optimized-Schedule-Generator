@@ -80,6 +80,7 @@ class Course:
   # gets list of all possible groups of linked sections 
   # (just the required e.g. lab, discussion, lecture) 
   # ex. {...{section discussion, section lecture, section lab}...}
+  # uses has_time_conflict(list) to eliminate some linked section combinations
   def get_linked_sections(self):
     linked_sections = []
 
