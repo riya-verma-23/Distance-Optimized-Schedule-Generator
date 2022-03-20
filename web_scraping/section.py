@@ -17,13 +17,21 @@ class Section:
   start: datetime object representing start time
   end: datetime object representing end time
   '''
-  
+
   # Initialize Section object given the section name, path to the section's xml file,
   # and its Course
   def __init__(self, name, section_path, course):
     self.course = course.subject + course.num
     self.name = name
     self.init_location(section_path)
+
+  # modifying Riya's version (below) copy pasted here due to problems with git pull
+  # def __eq__(self, other):
+  #  return (self.course == other.course) and (self.name == other.name)
+  
+  # check if two Sections are the same
+  def __eq__(self, other):
+    return self.course == other.get_course() and self.name == other.get_name() and self.section_type == other.get_type() and self.location == other.get_location() and self.days == other.get_days() and self.start == other.get_start() and self.end == other.get_end()
   
   # Initialize location, section type, meeting days, and start and end time
   # from Section XML file
@@ -53,7 +61,7 @@ class Section:
   # Determine whether two sections are linked
   # If two sections belong to the same course and have the same first letter, they're linked
   def linked(self, other_section):
-    return (self.course == other_section.course) and (self.name[0] == other_section.name[0])
+    return (self.course == other_section.course) and (self.name[0] == other_section.get_name()[0])
   
   # Get course name this section belongs to 
   def get_course(self):
