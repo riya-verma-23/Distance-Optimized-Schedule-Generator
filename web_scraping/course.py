@@ -46,6 +46,12 @@ class Course:
     except:
       raise ValueError
   
+  # Takes all sections from dictionary and splits it based on type
+  # Discussion = [ section A, section B ]
+  # Lecture = [ section C, section D ]
+  # Lab = [ section E, section F ]
+  # returns {'Discussion':Discussion , 'Lecture':Lecture , 'Lab':Lab }
+
   def split_sections_on_type(self):
     sections_by_type = {}
     
@@ -60,6 +66,7 @@ class Course:
 
     return sections_by_type
   
+  # check if a list of sections contains a time conflict
   def has_time_conflict(self, section_list):
 
     # check all pairs (obviously no time conflict not transitive)
@@ -70,6 +77,9 @@ class Course:
 
     return False
   
+  # gets list of all possible groups of linked sections 
+  # (just the required e.g. lab, discussion, lecture) 
+  # ex. {...{section discussion, section lecture, section lab}...}
   def get_linked_sections(self):
     linked_sections = []
 
@@ -86,10 +96,15 @@ class Course:
     
   class LinkedSection:
     
+    '''
+    Encapsulates a list of linked sections
+    '''
+
     def __init__(self, sections):
         # linked sections
         self.sections = sections
 
+    # Add a section to this group of linked sections
     def add_section(self, section):
       self.sections.append(section)
 
@@ -97,12 +112,18 @@ class Course:
     def __getitem__(self, index):
       return self.sections[index]
   
-  # Access all instance vars 
+  # Get section with given name
   def get_section(self, section_name):
-    return self.sections[section_name]
+    try:
+      return self.sections[section_name]
+    except:
+      print("not a section")
+      raise ValueError
 
+  # Get course subject
   def get_subject(self):
     return self.subject
   
+  # Get course number
   def get_number(self):
     return self.num
