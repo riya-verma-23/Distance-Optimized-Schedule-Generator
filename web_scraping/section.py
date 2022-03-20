@@ -36,14 +36,14 @@ class Section:
       self.location = loc[0].string
     else:
       self.location = "N/A"
-    self.days = soup.findAll("daysOfTheWeek")[0].string
+    self.days = soup.findAll("daysOfTheWeek")[0].string.strip()
     self.start = datetime.datetime.strptime(soup.findAll("start")[0].string, '%I:%M %p')
     self.end = datetime.datetime.strptime(soup.findAll("end")[0].string, '%I:%M %p')
   
   # Get whether two sections have a time conflict
   # If one starts between the other's start and end times, there's a time conflict
   def has_time_conflict(self, other_section):
-    if self.days == other_section.days:
+    if self != other_section and self.days == other_section.days:
       if self.start >= other_section.start and self.start <= other_section.end:
         return True
       if other_section.start >= self.start and other_section.start <= self.end:
@@ -54,3 +54,26 @@ class Section:
   # If two sections belong to the same course and have the same first letter, they're linked
   def linked(self, other_section):
     return (self.course == other_section.course) and (self.name[0] == other_section.name[0])
+  
+  # Access all instance vars 
+
+  def get_course(self):
+    return self.course
+  
+  def get_name(self):
+    return self.name
+  
+  def get_type(self):
+    return self.section_type
+
+  def get_location(self):
+    return self.location
+
+  def get_days(self):
+    return self.days
+  
+  def get_start(self):
+    return self.start
+  
+  def get_end(self):
+    return self.end
