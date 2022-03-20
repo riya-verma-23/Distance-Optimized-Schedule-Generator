@@ -55,25 +55,30 @@ class Section:
   def linked(self, other_section):
     return (self.course == other_section.course) and (self.name[0] == other_section.name[0])
   
-  # Access all instance vars 
-
+  # Get course name this section belongs to 
   def get_course(self):
     return self.course
   
+  # Get section name
   def get_name(self):
     return self.name
   
+  # Get section type e.g. "Lecture"
   def get_type(self):
     return self.section_type
 
+  # Get location e.g. "Altgeld Hall"
   def get_location(self):
     return self.location
 
+  # Get days the section meets e.g. "TR"
   def get_days(self):
     return self.days
   
+  # Get datetime obj representing start time
   def get_start(self):
     return self.start
   
+  # Get datetime obj representing end time
   def get_end(self):
     return self.end
