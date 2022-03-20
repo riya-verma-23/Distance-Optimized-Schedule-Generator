@@ -56,7 +56,6 @@ class Course:
   # Lecture = [ section C, section D ]
   # Lab = [ section E, section F ]
   # returns {'Discussion':Discussion , 'Lecture':Lecture , 'Lab':Lab }
-
   def split_sections_on_type(self):
     sections_by_type = {}
     
