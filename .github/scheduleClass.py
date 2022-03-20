@@ -1,11 +1,14 @@
+# class maintaining the Schedule 
 class Schedule:
     def __init__(self, score_, linked_sections_):
         self.score = score_
         self.linked_sections = linked_sections_
-    
+        
+#  score to compare schedule's for optimized distance and time    
 def getScore():
     return self.score
 
+# returns a daily schedule (which sections on each day)
 
 def split_sections_on_day(schedule):
     schedule = [[]]
@@ -31,6 +34,8 @@ def split_sections_on_day(schedule):
     for day in schedule:
        only_sections = [ section[0] for section in day ]
        result.append(only_sections)
+        
+# returns the days that need to be calculated
 
 def unique_days():
     list(set(this.schedule))
