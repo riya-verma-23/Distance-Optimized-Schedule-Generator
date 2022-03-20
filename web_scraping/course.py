@@ -13,6 +13,8 @@ class Course:
   sections: dictionary of the sections, where the key is section name
   subject: i.e. MATH
   num: i.e. 241
+  semester: i.e. spring
+  year: i.e. 2022
   '''
   
   # Get course page using semester, year, and already init subject and number
@@ -31,21 +33,24 @@ class Course:
       section_str = section.string.strip()
       self.sections[section_str] = Section(section_str, section.get('href'), self)
 
-  # equal operator for section objects by Riya. copy pasted due to problems with git pull
-  def __eq__(self, other):
-    return (self.course == other.course) and (self.name == other.name)
 
   # Initialize Course object given the semester, year, and course number
   def __init__(self, semester, year, course_num):
     try:
       self.subject = re.findall('\D+', course_num)[0]
       self.num = re.findall('\d+', course_num)[0]
+      self.semester = semester
+      self.year = year
       self.get_page(semester, year)
       self.init_sections()
     # if user forgot subject, number, or class unavailable in given semester, throw exception
     except:
       raise ValueError
   
+  # Check if two courses are equal
+  def __eq__(self, other):
+    return self.subject == other.get_subject() and self.num == other.get_number() and self.semester == other.get_semester() and self.year == other.get_year()
+
   # Takes all sections from dictionary and splits it based on type
   # Discussion = [ section A, section B ]
   # Lecture = [ section C, section D ]
@@ -121,6 +126,21 @@ class Course:
     # returns section at index i (can be called with [])
     def __getitem__(self, index):
       return self.sections[index]
+    
+    # returns # linked sections
+    def __len__(self):
+      return len(self.sections)
+    
+    # check if two LinkedSections are equal
+    def __eq__(self, other):
+      if len(self.sections) != len(other):
+        return False
+      
+      for i in range(len(self.sections)):
+        if self.sections[i] != other[i]:
+          return False
+      
+      return True
   
   # Get section with given name
   def get_section(self, section_name):
@@ -137,3 +157,11 @@ class Course:
   # Get course number
   def get_number(self):
     return self.num
+  
+  # Get semester course belongs to
+  def get_semester(self):
+    return self.semester
+  
+  # Get year course belongs to
+  def get_year(self):
+    return self.year
