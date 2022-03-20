@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from section import Section
 import re
 import requests
+import itertools as it
 
 class Course:
   '''
@@ -27,7 +28,12 @@ class Course:
     soup = BeautifulSoup(self.page, "lxml-xml")
     self.sections = {}
     for section in soup.findAll("section"):
-      self.sections[section.string] = Section(section.string, section.get('href'), self)
+      section_str = section.string.strip()
+      self.sections[section_str] = Section(section_str, section.get('href'), self)
+
+  # equal operator for section objects by Riya. copy pasted due to problems with git pull
+  def __eq__(self, other):
+    return (self.course == other.course) and (self.name == other.name)
 
   # Initialize Course object given the semester, year, and course number
   def __init__(self, semester, year, course_num):
@@ -39,14 +45,64 @@ class Course:
     # if user forgot subject, number, or class unavailable in given semester, throw exception
     except:
       raise ValueError
-     
+  
+  def split_sections_on_type(self):
+    sections_by_type = {}
+    
+    for section_name in self.sections:
+      section = self.sections[section_name]
+      section_type = section.get_type()
+      
+      if section_type in sections_by_type:
+        sections_by_type[section_type].append(section)
+      else:
+        sections_by_type[section_type] = [section]
+
+    return sections_by_type
+  
+  def has_time_conflict(self, section_list):
+
+    # check all pairs (obviously no time conflict not transitive)
+    for i in section_list:
+      for j in section_list:
+        if i != j and i.has_time_conflict(j):
+          return True
+
+    return False
+  
+  def get_linked_sections(self):
+    linked_sections = []
+
+    # TODO: optimize
+    sections_by_type = self.split_sections_on_type()
+    sorted_sections = sorted(sections_by_type)
+    combos = it.product(*(sections_by_type[section_name] for section_name in sorted_sections))
+
+    for combo in combos:
+      if not self.has_time_conflict(combo):
+        linked_sections.append(self.LinkedSection(combo))
+    
+    return linked_sections
     
   class LinkedSection:
     
-    def __init__(self):
+    def __init__(self, sections):
         # linked sections
-        self.sections = []
+        self.sections = sections
+
+    def add_section(self, section):
+      self.sections.append(section)
 
     # returns section at index i (can be called with [])
     def __getitem__(self, index):
       return self.sections[index]
+  
+  # Access all instance vars 
+  def get_section(self, section_name):
+    return self.sections[section_name]
+
+  def get_subject(self):
+    return self.subject
+  
+  def get_number(self):
+    return self.num
