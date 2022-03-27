@@ -1,21 +1,22 @@
 import requests
 import json
 from array import *
+import section
+import re
 
 class Distance:
-	def __init__(self):
 		#dictionary {key = (section, section), value = distance}
-		self.api_calls = {}
+	api_calls = {}
 
 #Demo Code from https://gist.github.com/olliefr/407c64413f61bd14e7af62fada6df866
 
-	def distance_matrix(origins, destinations):
+	def distance_matrix_file(origins, destinations):
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 
 		payload = {
 				'origins' : '|'.join(origins),
 				'destinations' : '|'.join(destinations), 
-				'key' : 'INSERT API KEY'
+				'key' : 'AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA'
 		}
 
 		r = requests.get(url, params = payload)
@@ -50,10 +51,18 @@ class Distance:
 		for i in range(origin_size):
 			dist = []
 			for j in range(dest_size):
-				dist.append(r.json()["rows"][i]["elements"][j]["distance"]["text"])
+				dist_str = r.json()["rows"][i]["elements"][j]["distance"]["text"]
+				#extract only integers from dist_str
+				num = re.findall('\d*\.?\d+',dist_str)
+				dist.append(float(num[0]))
 				print("\nThe distance is ", dist)
 			matrix.append(dist)
+		
+		return matrix
 
+	def get_distance_matrix(origins, destinations):
+		file = Distance.distance_matrix_file(origins, destinations)
+		matrix = Distance.generateMatrixfromJSON(file, len(origins), len(destinations))
 		return matrix
 
 	#takes in a set of linked sections (list of lists) and calculates score on each day
@@ -86,22 +95,24 @@ class Distance:
 					tuples.append(tuple(a))
 		return tuples
 
+	#elimininates sections that has already been called by the API and returns list of sections to be called
 	def eliminate_sections(sectionsinDay):
 		tuples = Distance.generate_tuple_sections(sectionsinDay)
 		res = []
 		for t in tuples:
 			if not(t in Distance.api_calls):
-				res.append(t[0])
-				res.append(t[1])
+				if not(t[0] in res): res.append(t[0])
+				if not(t[1] in res):res.append(t[1])
 		return res
 
 	#takes in an input of the sections on each day
 	def calculatePerimeterPerDay(sectionsinDay):
-		sectionsinDay = Distance.eliminate_called_sections()
+		sectionsinDay = Distance.eliminate_sections(sectionsinDay)
 		locations = []
 		for section in sectionsinDay:
-			locations.append(section.get_location())
-		distance_matrix = distance_matrix(locations, locations)
+			locations.append(section.get_location() + " UIUC")
+		distance_matrix = Distance.get_distance_matrix(locations, locations)
+		print(distance_matrix)
 		perimeter = 0
 		for i in range(len(distance_matrix) - 1):
 			perimeter += distance_matrix[i][i+1]
@@ -109,8 +120,10 @@ class Distance:
 		return perimeter
 
 	#generates all schedule combinations by picking one linked section from each class and storing those schedules as a matrix of ordered locations
+	#finding all possible combinations of linked sections => schedule
 	def generateScheduleCombinations(courses):
 		n = len(courses)
+
 		all_schedule = [] #each schedule will be a set of linked sections, all schedules is all possible sets
 		indexes = []
 
@@ -155,3 +168,7 @@ class Distance:
 				best_schedule = schedule
 		
 		return best_schedule
+
+	def scoreAllSchedules(all_schedules):
+		for schedule in all_schedules:
+			schedule.set_score(Distance.score(schedule))
