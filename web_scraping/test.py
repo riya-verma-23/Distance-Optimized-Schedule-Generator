@@ -48,7 +48,9 @@ class TestWebScraping(unittest.TestCase):
   def test_section_equals(self):
     aas297 = Course("spring", "2022", "AAS297")
     
-    section_a = Section('A', 'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/62166.xml', aas297) 
+    section_a = Section('A',
+                        'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/62166.xml',
+                        aas297) 
     self.assertEqual(section_a, aas297.get_section('A'))
 
     self.assertNotEqual(aas297.get_section('B'), aas297.get_section('A'))
@@ -97,8 +99,12 @@ class TestWebScraping(unittest.TestCase):
     aas297 = Course("spring", "2022", "AAS297")
 
     linked_section_ls = aas297.get_linked_sections()
-    section_a = Section('A', 'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/62166.xml', aas297)
-    section_b = Section('B', 'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/73220.xml', aas297)
+    section_a = Section('A',
+                        'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/62166.xml',
+                        aas297) 
+    section_b = Section('B',
+                        'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/73220.xml',
+                        aas297) 
 
     ans = [Course.LinkedSection([section_a]), Course.LinkedSection([section_b])]
 
@@ -110,10 +116,17 @@ class TestWebScraping(unittest.TestCase):
     math241 = Course("spring", "2022", "MATH241")
 
     linked_section_ls = math241.get_linked_sections()
-    ada = Section('ADA', 'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/46053.xml', math241)
-    adb = Section('ADB', 'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/46054.xml', math241)
-    al1 = Section('AL1', 'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/46060.xml', math241)
-    al2 = Section('AL2', 'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/46067.xml', math241)
+    ada = Section('ADA',
+                  'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/46053.xml',
+                  math241)
+    adb = Section('ADB',
+                  'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/46054.xml', math241)
+    al1 = Section('AL1',
+                  'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/46060.xml',
+                  math241)
+    al2 = Section('AL2',
+                  'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/46067.xml',
+                  math241)
 
     ans = [Course.LinkedSection([ada, al1]), Course.LinkedSection([ada, al2]), Course.LinkedSection([adb, al1]), Course.LinkedSection([adb, al2])]
 
@@ -127,6 +140,6 @@ class TestWebScraping(unittest.TestCase):
     self.assertTrue(linked_section1 == linked_section)
     linked_section2 = Course.LinkedSection(['AB'])
     self.assertFalse(linked_section2 == linked_section)
-   
+ 
 if __name__ == '__main__':
     unittest.main()
