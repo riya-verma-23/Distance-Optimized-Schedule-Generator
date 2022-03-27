@@ -17,12 +17,7 @@ class Section:
   start: datetime object representing start time i.e. 08:00:00 or 00:00:00 for async
   end: datetime object representing end time i.e. 08:50:00 or 00:00:00 for async
   '''
-  # TODO: someone add to readme dependencies, use pipenv
-  # TODO: update documentation with new web scraping changes
-  # TODO: add semester and year boxes to webpage? or infer from current year
-  # TODO: work with Nalin to send relevant data to Section and Course modules
-  # TODO: PRs with all modules by next week
-  # TODO: resolve git pull, push issue (keep verified)
+
   # Initialize Section object given the section name, path to the section's xml file,
   # and its Course
   def __init__(self, name, section_path, course):
@@ -30,17 +25,18 @@ class Section:
     self.name = name
     self.init_location(section_path)
 
+  # check if two Sections are the same
   # modifying Riya's version (below) copy pasted here due to problems with git pull
-  # TODO: update PR during feedback (work in progress don't merge)
-  # TODO: nice to have more detail in PR description for reviewers how to run it etc 
-  # (how to use LinkedSection etc)
   # def __eq__(self, other):
   #  return (self.course == other.course) and (self.name == other.name)
-
-  # check if two Sections are the same
   def __eq__(self, other):
-    # TODO: make this not one line
-    return self.course == other.get_course() and self.name == other.get_name() and self.section_type == other.get_type() and self.location == other.get_location() and self.days == other.get_days() and self.start == other.get_start() and self.end == other.get_end()
+    return self.course == other.get_course() and\
+      self.name == other.get_name() and\
+      self.section_type == other.get_type() and\
+      self.location == other.get_location() and\
+      self.days == other.get_days() and\
+      self.start == other.get_start() and\
+      self.end == other.get_end()
   
   # Initialize location, section type, meeting days, and start and end time
   # from Section XML file
@@ -80,7 +76,8 @@ class Section:
   # If one starts between the other's start and end times, there's a time conflict
   # A section cannot have a time conflict with itself
   def has_time_conflict(self, other_section):
-    if self != other_section and (self.days in other_section.get_days() or other_section.get_days() in self.days):
+    if self != other_section and\
+     (self.days in other_section.get_days() or other_section.get_days() in self.days):
       if self.start >= other_section.start and self.start <= other_section.end:
         return True
       if other_section.start >= self.start and other_section.start <= self.end:
@@ -90,7 +87,8 @@ class Section:
   # Determine whether two sections are linked
   # If two sections belong to the same course and have the same first letter, they're linked
   def linked(self, other_section):
-    return (self.course == other_section.course) and (self.name[0] == other_section.get_name()[0])
+    return (self.course == other_section.course) and\
+     (self.name[0] == other_section.get_name()[0])
   
   # Get course name this section belongs to 
   def get_course(self):
