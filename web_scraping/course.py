@@ -180,6 +180,6 @@ class Course:
   # Get all Section objs
   def get_sections(self):
     section_ls = []
-    for section in sections:
-      section_ls.append(sections[section])
+    for section in self.sections:
+      section_ls.append(self.sections[section])
     return section_ls
