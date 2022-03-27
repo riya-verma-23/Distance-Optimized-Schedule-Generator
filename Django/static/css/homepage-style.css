@@ -10,7 +10,7 @@ html{
     scroll-behavior: smooth;
 }
 
-.mx-width{
+.max-width{
     max-width: 1300px;
     padding: 0 80px;
     margin: auto
@@ -40,13 +40,13 @@ html{
 
 .inputs .field{
     display: inline-block;
-    width: 100%;
+    width: calc(40%);
     margin-bottom: 30px;
-    margin-left: 38%;
 }
 
 .inputs .field .text-box{
-    width: 20%;
+    width: 40%;
+    margin-left: 50%;
     border-radius: 20px;
     background: #ffac12;
     padding: 10px 0px 10px 40px;
