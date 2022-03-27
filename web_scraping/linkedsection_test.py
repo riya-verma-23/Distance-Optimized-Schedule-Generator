@@ -54,14 +54,15 @@ class TestWebScraping(unittest.TestCase):
     def test_section_ls_time_confict(self):
         math241 = Course("spring", "2022", "MATH241")
         aas100 = Course("spring", "2022", "AAS100")
-        section_ls = [math241.get_section('ADB'), aas100.get_section('AB')]
+        
+        section_ls = [math241.get_section('ADB')]
+        section_ls_1 = [aas100.get_section('AB')]
 
         linked = Course.LinkedSection(section_ls)
-        self.assertTrue(linked.has_time_conflict())
-
-        section_ls_1 = [math241.get_section('ADB'), math241.get_section('ADB')]
         linked1 = Course.LinkedSection(section_ls_1)
-        self.assertFalse(linked1.has_time_conflict())
+
+        self.assertTrue(linked.has_time_conflict(linked1))        
+        self.assertFalse(linked.has_time_conflict(linked))
 
  
 if __name__ == '__main__':
