@@ -10,6 +10,10 @@ class TestWebScraping(unittest.TestCase):
     self.assertRaises(ValueError, Course, "spring", "-2022", "MATH241")
     self.assertRaises(ValueError, Course, "notasemester", "3022", "MATH241")
     self.assertRaises(ValueError, Course, "spring", "3022", "NOTASUBJECT241")
+    try:
+      Course("spring", "2022", "STAT400")
+    except:
+      self.fail("Course stat400 failed unexpectedly!")
   
   def test_course_init_and_accessors(self):
     math241 = Course("spring", "2022", "MATH241")
