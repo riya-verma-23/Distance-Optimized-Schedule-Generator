@@ -23,7 +23,7 @@ class Course:
     response = requests.get(path)
     self.page = response.text
     if not len(self.page):
-      raise ValueError
+      raise ValueError("no page found")
   
   # Init the sections dictionary using each course's XML file
   def init_sections(self):
@@ -45,7 +45,7 @@ class Course:
       self.init_sections()
     # if user forgot subject, number, or class unavailable in given semester, throw exception
     except:
-      raise ValueError
+      raise ValueError("bad course num")
   
   # Check if two courses are equal
   def __eq__(self, other):
@@ -100,8 +100,19 @@ class Course:
     # TODO: optimize
     sections_by_type = self.split_sections_on_type()
     sorted_sections = sorted(sections_by_type)
+    
+    # Get all possible combos of each section type
+    # 1. Get lists of different section types from sorted sections by type dictionary
+    # 2. Cartesian product of of these lists
+    #    a. Unpack the lists (pass section_a, section_b, section_c instead of (section_a, section_b ...))
+    #    b. Convert each list to a tuple
+    #    c. Create lists storing each value in first list, then each value in first list + each value in
+    #       second, and so on
+    #    d. Return a generator encapsulating the combos (iteration works same as w list) where a0 is in 
+    #       the first section type, a1 is in the second, and so on)
     combos = it.product(*(sections_by_type[section_name] for section_name in sorted_sections))
-
+    # 3. Delete combos where sections have time conflicts (i.e. one Lecture section is at the
+    #    same time as a discussion section
     for combo in combos:
       if (not self.has_time_conflict(combo)) and self.linked(combo):
         linked_sections.append(self.LinkedSection(combo))
@@ -146,8 +157,7 @@ class Course:
     try:
       return self.sections[section_name]
     except:
-      print("not a section")
-      raise ValueError
+      raise KeyError("not a section")
 
   # Get course subject
   def get_subject(self):
