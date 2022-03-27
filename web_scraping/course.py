@@ -19,11 +19,12 @@ class Course:
   
   # Get course page using semester, year, and already init subject and number
   def get_page(self, semester, year):
-    path = "https://courses.illinois.edu/cisapp/explorer/schedule/" + year + "/" + semester.lower() + "/" + self.subject + "/" + self.num + ".xml"
+    path = "https://courses.illinois.edu/cisapp/explorer/schedule/" + year +\
+     "/" + semester.lower() + "/" + self.subject + "/" + self.num + ".xml"
     response = requests.get(path)
     self.page = response.text
     if not len(self.page):
-      raise ValueError
+      raise ValueError("no page found")
   
   # Init the sections dictionary using each course's XML file
   def init_sections(self):
@@ -45,11 +46,12 @@ class Course:
       self.init_sections()
     # if user forgot subject, number, or class unavailable in given semester, throw exception
     except:
-      raise ValueError
+      raise ValueError("bad course num")
   
   # Check if two courses are equal
   def __eq__(self, other):
-    return self.subject == other.get_subject() and self.num == other.get_number() and self.semester == other.get_semester() and self.year == other.get_year()
+    return self.subject == other.get_subject() and self.num == other.get_number() and\
+     self.semester == other.get_semester() and self.year == other.get_year()
 
   # Takes all sections from dictionary and splits it based on type
   # Discussion = [ section A, section B ]
@@ -100,8 +102,19 @@ class Course:
     # TODO: optimize
     sections_by_type = self.split_sections_on_type()
     sorted_sections = sorted(sections_by_type)
+    
+    # Get all possible combos of each section type
+    # 1. Get lists of different section types from sorted sections by type dictionary
+    # 2. Cartesian product of of these lists
+    #    a. Unpack the lists (pass section_a, section_b, section_c instead of (section_a, section_b ...))
+    #    b. Convert each list to a tuple
+    #    c. Create lists storing each value in first list, then each value in first list + each value in
+    #       second, and so on
+    #    d. Return a generator encapsulating the combos (iteration works same as w list) where a0 is in 
+    #       the first section type, a1 is in the second, and so on)
     combos = it.product(*(sections_by_type[section_name] for section_name in sorted_sections))
-
+    # 3. Delete combos where sections have time conflicts (i.e. one Lecture section is at the
+    #    same time as a discussion section
     for combo in combos:
       if (not self.has_time_conflict(combo)) and self.linked(combo):
         linked_sections.append(self.LinkedSection(combo))
@@ -146,8 +159,7 @@ class Course:
     try:
       return self.sections[section_name]
     except:
-      print("not a section")
-      raise ValueError
+      raise KeyError("not a section")
 
   # Get course subject
   def get_subject(self):
@@ -164,3 +176,10 @@ class Course:
   # Get year course belongs to
   def get_year(self):
     return self.year
+  
+  # Get all Section objs
+  def get_sections(self):
+    section_ls = []
+    for section in self.sections:
+      section_ls.append(self.sections[section])
+    return section_ls
