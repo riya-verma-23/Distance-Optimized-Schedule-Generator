@@ -4,7 +4,18 @@ Course, Section, LinkedSection classes encapsulate functions that get and access
 ## How To Use
 
 ### Dependencies
+* Python3 3.6.8
+* beautifulsoup4 (4.10.0)
+* bs4 (0.0.1)
+* lxml (4.8.0)
+* requests (2.27.1)
+* urllib3 (1.26.8)
+
 ### Example
+* Get year, semester, SUBJ### from UI
+* `course = Course('year', 'semester', 'SUBJ###')`
+* `linked_sections = course.get_linked_sections()`
+* linked_sections used in other modules
 
 ## Course
 
