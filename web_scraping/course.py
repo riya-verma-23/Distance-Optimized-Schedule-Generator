@@ -176,3 +176,10 @@ class Course:
   # Get year course belongs to
   def get_year(self):
     return self.year
+  
+  # Get all Section objs
+  def get_sections(self):
+    section_ls = []
+    for section in sections:
+      section_ls.append(sections[section])
+    return section_ls
