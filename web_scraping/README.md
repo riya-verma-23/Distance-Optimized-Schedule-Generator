@@ -41,3 +41,28 @@ Functions
 * **__getitem__(self, index)**: Returns section at index i (can be called with [])
 * **__len__(self)**: Returns # linked sections (can be called with len(linked_section))
 * **__eq__(self, other)**: Check if two LinkedSections are equal
+
+## Section
+
+### Instance variables
+* **course**: Course the section belongs to
+* **name**: Section name (i.e. ADB)
+* **section_type**: i.e. Lecture, Discussion
+* **location**: i.e. Altgeld Hall
+* **days**: days the Section meets. i.e. MWF, TR or ASYNC for async section
+* **start**: datetime object representing start time i.e. 08:00:00 or 00:00:00 for async
+* **end**: datetime object representing end time i.e. 08:50:00 or 00:00:00 for async
+
+### Functions
+* **__init__(self, name, section_path, course)**: Init function for Section using section XML file
+* **__eq__(self, other)**: check if two Sections are the same
+* **init_location(self, section_path)**: Initialize location, section type, meeting days, and start and end time from Section XML file
+* **has_time_conflict(self, other_section)**: Get whether two sections have a time conflict
+* **linked(self, other_section)**: Determine whether two sections are linked
+* **get_course(self)**: Get course name this section belongs to 
+* **get_name(self)**: Get section name
+* **get_type(self)**: Get section type
+* **get_location(self)**: Get location
+* **get_days(self)**: Get section days
+* **get_start(self)**: Get datetime obj representing start time
+* **get_end(self)**: Get datetime obj representing end time
