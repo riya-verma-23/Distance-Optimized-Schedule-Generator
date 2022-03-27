@@ -38,25 +38,26 @@ html{
     padding-left: 40px;
 }
 
-.inputs .card{
+.inputs .field{
     display: inline-block;
-    width: calc(33%);
+    width: 100%;
     margin-bottom: 30px;
+    margin-left: 38%;
 }
 
-.inputs .card .text-box{
-    width: 80%;
+.inputs .field .text-box{
+    width: 20%;
     border-radius: 20px;
     background: #ffac12;
     padding: 10px 0px 10px 40px;
     transition: all 0.3s ease;
 }
 
-.inputs .card .text-box:hover{
+.inputs .field .text-box:hover{
     transform: scale(1.05);
 }
 
-.inputs .card .text-box input{
+.inputs .field .text-box input{
     border: none;
     background: #ffac12;
 }

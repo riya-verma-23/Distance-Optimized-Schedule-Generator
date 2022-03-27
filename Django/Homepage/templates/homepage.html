@@ -5,11 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{% static 'homepage-style.css' %}" rel="stylesheet">
+
+
+    <!-- CSS  -->
+    <link href="{% static 'css/homepage-style.css' %}" rel="stylesheet">
+
     <title>Distance Optimized Schedule Generator</title>
 </head>
 
 <body>
+
     <!-- Project Title -->
     <section class="title" id="title">
         <div class="max-width">
@@ -23,13 +28,13 @@
         <div class="max-width">
             <form action="." method="POST">
                 {% csrf_token %}
-                <div class="card">
+                <div class="field">
                     <div class="text-box">
                         <label for="crn">CRN:</label>
-                        <input type="number" name="crn" id="crn" required>
+                        <input type="text" name="crn" id="crn" required>
                     </div>
                 </div>
-                <div class="card">
+                <!-- <div class="card">
                     <div class="text-box">
                         <label for="location">Location:</label>
                         <input type="text" name="location" id="location">
@@ -40,7 +45,7 @@
                         <label for="instructor">Proffesor/TA:</label>
                         <input type="text" name="instructor" id="instructor">
                     </div>
-                </div>
+                </div> -->
                 <button type="submit">Submit</button>
             </form>
         </div>
@@ -49,7 +54,7 @@
     <!-- Schedule -->
     <section class="schedule" id="schedule">
         <div class="max-width">
-            <p>Here are your Distance Optimized Schedules:</p>
+            <p>Here is your Distance Optimized Schedule:</p>
             <div class="card one">
                 <div class="map" id="map">
                     <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen
@@ -80,7 +85,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="card two">
+            <!-- <div class="card two">
                 <div class="map" id="map">
                     <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen
                         src="{{maps_link}}">
@@ -139,7 +144,7 @@
                         <td>{{section_5_2}}</td>
                     </tr>
                 </table>
-            </div>
+            </div> -->
         </div>
     </section>
 
