@@ -140,6 +140,24 @@ class TestWebScraping(unittest.TestCase):
     self.assertTrue(linked_section1 == linked_section)
     linked_section2 = Course.LinkedSection(['AB'])
     self.assertFalse(linked_section2 == linked_section)
+  
+  def test_get_sections(self):
+    aas297 = Course("spring", "2022", "AAS297")
+
+    linked_section_ls = aas297.get_linked_sections()
+    section_a = Section('A',
+                        'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/62166.xml',
+                        aas297) 
+    section_b = Section('B',
+                        'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/73220.xml',
+                        aas297)
+    
+    ans_ls = [section_a, section_b]
+    section_ls = aas297.get_sections()
+
+    for i in range(len(ans_ls)):
+      self.assertEqual(ans_ls[i], section_ls[i])
+
  
 if __name__ == '__main__':
     unittest.main()
