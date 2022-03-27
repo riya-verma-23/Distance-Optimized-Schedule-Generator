@@ -2,7 +2,8 @@ import unittest
 import numpy as np
 import distances
 from distances import *
-from course import Course
+from web_scraping.course import Course
+import web_scraping.section
 
 # def test_distance_matrix():
 #     locations = ["chicago", "hendrick house", "new york city", "san francisco"]

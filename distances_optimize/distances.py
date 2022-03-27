@@ -1,7 +1,8 @@
 import requests
 import json
 from array import *
-import section
+from web_scraping.course import Course
+import web_scraping.section
 import re
 
 class Distance:
@@ -16,7 +17,7 @@ class Distance:
 		payload = {
 				'origins' : '|'.join(origins),
 				'destinations' : '|'.join(destinations), 
-				'key' : 'AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA'
+				'key' : 'INSERT API KEY HERE'
 		}
 
 		r = requests.get(url, params = payload)
