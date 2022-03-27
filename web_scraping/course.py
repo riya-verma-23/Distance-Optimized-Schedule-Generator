@@ -157,12 +157,12 @@ class Course:
     def get_days(self):
       self.days = ""
 
-    # check if a LinkedSection contains a time conflict
-    def has_time_conflict(self):
+    # check two LinkedSections have a time conflict
+    def has_time_conflict(self, other):
 
       # check all pairs (obviously no time conflict not transitive)
       for i in self.sections:
-        for j in self.sections:
+        for j in other:
           if i != j and i.has_time_conflict(j):
             return True
 
