@@ -19,7 +19,8 @@ class Course:
   
   # Get course page using semester, year, and already init subject and number
   def get_page(self, semester, year):
-    path = "https://courses.illinois.edu/cisapp/explorer/schedule/" + year + "/" + semester.lower() + "/" + self.subject + "/" + self.num + ".xml"
+    path = "https://courses.illinois.edu/cisapp/explorer/schedule/" + year +\
+     "/" + semester.lower() + "/" + self.subject + "/" + self.num + ".xml"
     response = requests.get(path)
     self.page = response.text
     if not len(self.page):
@@ -49,7 +50,8 @@ class Course:
   
   # Check if two courses are equal
   def __eq__(self, other):
-    return self.subject == other.get_subject() and self.num == other.get_number() and self.semester == other.get_semester() and self.year == other.get_year()
+    return self.subject == other.get_subject() and self.num == other.get_number() and\
+     self.semester == other.get_semester() and self.year == other.get_year()
 
   # Takes all sections from dictionary and splits it based on type
   # Discussion = [ section A, section B ]
