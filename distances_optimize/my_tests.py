@@ -2,15 +2,15 @@ import unittest
 import numpy as np
 import distances
 from distances import *
-from web_scraping.course import Course
-import web_scraping.section
+from course import Course
+import section
 
-# def test_distance_matrix():
-#     locations = ["chicago", "hendrick house", "new york city", "san francisco"]
-#     r = distances.Distance.distance_matrix(locations, locations)
-#     matrix = distances.Distance.generateMatrixfromJSON(r, len(locations), len(locations))
-#     ans = [['1 m', '222 km', '1,270 km', '3,424 km'], ['223 km', '1 m', '1,335 km', '3,460 km'], ['1,271 km', '1,331 km', '1 m', '4,670 km'], ['3,431 km', '3,466 km', '4,677 km', '1 m']]
-#     np.testing.assert_array_equal(matrix, ans)
+def test_distance_matrix():
+    locations = ["chicago", "hendrick house", "new york city", "san francisco"]
+    r = distances.Distance.distance_matrix(locations, locations)
+    matrix = distances.Distance.generateMatrixfromJSON(r, len(locations), len(locations))
+    ans = [['1 m', '222 km', '1,270 km', '3,424 km'], ['223 km', '1 m', '1,335 km', '3,460 km'], ['1,271 km', '1,331 km', '1 m', '4,670 km'], ['3,431 km', '3,466 km', '4,677 km', '1 m']]
+    np.testing.assert_array_equal(matrix, ans)
 
 def test_generateScheduleCombinations_integers():
     ans = [[1, 3, 5], [1, 3, 6], [1, 3, 7], [1, 4, 5], [1, 4, 6], [1, 4, 7], [2, 3, 5], [2, 3, 6], [2, 3, 7], [2, 4, 5], [2, 4, 6], [2, 4, 7]]
@@ -64,4 +64,6 @@ def test_eliminate_sections():
 if __name__ == "__main__":
     test_generateScheduleCombinations()
     test_eliminate_sections()
+    test_calculatePerimeterPerDay()
+    test_generateScheduleCombinations_integers()
     print("Everything passed")

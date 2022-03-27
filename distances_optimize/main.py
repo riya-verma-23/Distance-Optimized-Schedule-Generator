@@ -2,13 +2,9 @@ import requests
 import json
 from array import *
 import distances
-import sys
-from web_scraping.course import Course
-import web_scraping.section
+from course import Course
+import section
 
-
-#API KEY
-api_key = "INSERT API KEY HERE"
 
 cs225 = Course("spring", "2022", "CS225")
 scan252 = Course("spring", "2022", "SCAN252")

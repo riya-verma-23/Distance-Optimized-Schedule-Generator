@@ -1,8 +1,8 @@
 import requests
 import json
 from array import *
-from web_scraping.course import Course
-import web_scraping.section
+from course import Course
+import section
 import re
 
 class Distance:
@@ -13,11 +13,18 @@ class Distance:
 
 	def distance_matrix_file(origins, destinations):
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+		api_key = ''
+		try:
+			with open('distances_optimize/api_key', 'r') as f:
+				api_key = f.read().strip()
+		except FileNotFoundError:
+			print("'%s' file not found" % 'api_key')
+		print(api_key)
 
 		payload = {
 				'origins' : '|'.join(origins),
 				'destinations' : '|'.join(destinations), 
-				'key' : 'INSERT API KEY HERE'
+				'key' : api_key
 		}
 
 		r = requests.get(url, params = payload)
