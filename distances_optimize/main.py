@@ -10,17 +10,18 @@ from course import Course
 cs225 = Course("spring", "2022", "CS225")
 scan252 = Course("spring", "2022", "SCAN252")
 stat410 = Course("spring", "2022", "STAT410")
-# sectionsInDay = [stat410.get_section("1UG"), cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG"), scan252.get_section("C")]
-# sectionsInDay = list(dict.fromkeys(sectionsInDay)) #removes repeats
-# for s in sectionsInDay:
-#     print(s.get_name())
+sectionsInDay = [stat410.get_section("1UG"), cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG"), scan252.get_section("C")]
+sectionsInDay = list(dict.fromkeys(sectionsInDay)) #removes repeats
+for s in sectionsInDay:
+    print(s.get_name())
 
-# sectionsInDay = sorted(sectionsInDay, key=lambda x: x.start, reverse=False) #sort based on time
-# for s in sectionsInDay:
-#     print(s.get_name())
+sectionsInDay = sorted(sectionsInDay, key=lambda x: x.start, reverse=False) #sort based on time
+for s in sectionsInDay:
+    print(s.get_name())
 
-# for t in distances.Distance.generate_tuple_sections(sectionsInDay):
-#     print(t[0].get_name(),t[1].get_name())
+for t in distances.Distance.generate_tuple_sections(sectionsInDay):
+    print(t[0].get_name(),t[1].get_name())
+
 distances.Distance.append_to_dict([cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG")])
 actual = distances.Distance.calculatePerimeterPerDay(sectionsinDay=[cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG")])
 print(actual)
@@ -30,12 +31,3 @@ print(actual)
 # schedules = distances.Distance.generateScheduleCombinations([math241, cs225])
 # print(schedules)
 
-# ans = [(1, 2), (1, 3), (2, 3)]
-# eliminate = distances.Distance.generate_tuple_sections([1,1,1,2,3])
-# print(eliminate)
-# ans = [(3, 4), (3, 5), (4, 5)]
-# eliminate = distances.Distance.generate_tuple_sections([3,3,4,4,5,5])
-# print(eliminate)
-# distances.Distance.api_calls = {(1,2): 1.0, (1,3):2.0}
-# eliminate = distances.Distance.eliminate_sections([1,1,1,2,3])
-# print(eliminate)

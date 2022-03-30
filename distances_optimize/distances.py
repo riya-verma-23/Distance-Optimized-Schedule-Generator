@@ -1,20 +1,24 @@
 import requests
 import json
 from array import *
+import itertools as it
 import re
 import sys
 sys.path.insert(0, 'web_scraping')
-from course import Course
-import section
 sys.path.insert(1, 'schedule')
-from schedule import Schedule
-import itertools as it
+from schedule import *
+
+'''
+This class is used to calculate the best distance optimized schedule
+Input: list of course objects the user is taking
+Output: a distance optimized Schedule Object that contains the linked sections to take for each course
+'''
 
 class Distance:
-		#dictionary {key = (section index, section index), value = distance}
+	#dictionary {key = (section index, section index), value = distance}
 	api_calls = {}
 
-#Demo Code from https://gist.github.com/olliefr/407c64413f61bd14e7af62fada6df866
+	#Demo Code from https://gist.github.com/olliefr/407c64413f61bd14e7af62fada6df866
 	#calls API and generates JSON file with distances between origins and destinations
 	def distance_matrix_file(origins, destinations):
 		print(origins, destinations)
@@ -84,8 +88,7 @@ class Distance:
 	#wrapper function for distance_matrix_file and append_dict_from_JSON that calls API and appends to dictionary
 	def append_to_dict(sections):
 		locations = []
-		for section in sections:
-			locations.append(section.get_location() + " UIUC")
+		for section in sections: locations.append(section.get_location() + " UIUC")
 		file = Distance.distance_matrix_file(locations, locations)
 		Distance.append_dict_from_JSON(file, sections)
 
@@ -94,8 +97,7 @@ class Distance:
 		#returns 0..4 list with sections on each day
 		daily_schedule = Schedule.split_sections_on_day(schedule)
 		sum = 0
-		for i in range(len(daily_schedule)):
-			sum += Distance.calculatePerimeterPerDay(daily_schedule[i])
+		for i in range(len(daily_schedule)): sum += Distance.calculate_perimeter_per_day(daily_schedule[i])
 		return sum
 
 	#generates unique sorted tuples (section, section) by start time for sections on a particular day
@@ -103,8 +105,7 @@ class Distance:
 	def generate_tuple_sections(sectionsinDay):
 		sectionsinDay = list(dict.fromkeys(sectionsinDay)) #removes repeats
 		sectionsinDay = sorted(sectionsinDay, key=lambda x: x.start, reverse=False) #sort based on time
-		tuples = it.combinations(sectionsinDay, 2)
-		tuples = list(tuples)
+		tuples = list(it.combinations(sectionsinDay, 2))
 		return tuples
 		
 	#eliminates sections that has already been called by the API and returns list of sections to be called
@@ -119,24 +120,18 @@ class Distance:
 		return res
 
 	#calculates the distance of the path (perimeter) between sections on a particular day
-	def calculatePerimeterPerDay(sectionsinDay):
+	def calculate_perimeter_per_day(sectionsinDay):
 		sections_to_call = Distance.eliminate_sections(sectionsinDay)
-		#append to api call
 		if (len(sections_to_call) != 0): 
-			print("appended to dictionary in cppd")
 			Distance.append_to_dict(sections_to_call)
 		tuples = Distance.generate_tuple_sections(sectionsinDay)
-		print("tuples")
-		for t in tuples:
-			print(t[0].get_name(),t[1].get_name())
-
 		perimeter = 0
 		for t in tuples:
 			perimeter += Distance.api_calls[t]
 		return perimeter
 
 	#generates all valid schedule combinations without time conflicts by picking one linked section from each course
-	def generateScheduleCombinations(courses):
+	def generate_schedule_combinations(courses):
 		n = len(courses)
 
 		ll = []
@@ -177,10 +172,23 @@ class Distance:
 				indexes[i] = 0
 			
 		return all_schedule
-				
-	#finds the highest scoring schedule in all valid schedules
-	def findBestSchedule(all_schedules):
-		Distance.scoreAllSchedules(all_schedules)
+
+	#sets the score of all valid schedules
+	def score_all_schedules(all_schedules):
+		for schedule in all_schedules: schedule.set_score(Distance.score(schedule))
+	
+	#user will input in the course names they are taking
+	#course name is used to create a list of course objects which is passed into best_schedule
+	#generates all valid schedules
+	#scores all the schedules
+	#by calling score on each schedule which sums up the distances between sections on all days
+	#score() calls calculate_perimeter_per_day based on sections that occur on diff days
+	#calculate_perimter_per_day() calls eliminate_sections() and generate_tuple_sections() and append_to_dict()
+	#to retrive data from previous api calls and make new api calls
+	#append_to_dict() calls distance_matrix_file() and append_dict_from_JSON() to retrive data from Distance Matrix API
+	def best_schedule(courses):
+		all_schedules = Distance.generate_schedule_combinations(courses)
+		Distance.score_all_schedules(all_schedules)
 		min = 1000000000.0
 		best_schedule = []
 		for schedule in all_schedules:
@@ -188,10 +196,4 @@ class Distance:
 			if val <= min:
 				min = val
 				best_schedule = schedule
-		
 		return best_schedule
-
-	#sets the score of all valid schedules
-	def scoreAllSchedules(all_schedules):
-		for schedule in all_schedules:
-			schedule.set_score(Distance.score(schedule))
