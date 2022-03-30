@@ -61,21 +61,7 @@ class Distance:
 		print(r.text)
 		return r
 
-	#From JSON file, function extracts a matrix of distances
-	#directly create dictionary instead of matrix
-	def generateMatrixfromJSON(r, origin_size, dest_size): 
-		matrix = []
-		for i in range(origin_size):
-			dist = []
-			for j in range(dest_size):
-				dist_str = r.json()["rows"][i]["elements"][j]["distance"]["text"]
-				num = re.findall('\d*\.?\d+',dist_str)
-				dist.append(float(num[0]))
-				print("\nThe distance is ", dist)
-			matrix.append(dist)
-		
-		return matrix
-	
+	#From JSON file, appends to a dictionary of distances
 	def appendDictfromJSON(r, sections):
 		for i in range(len(sections)):
 			for j in range(len(sections)):
