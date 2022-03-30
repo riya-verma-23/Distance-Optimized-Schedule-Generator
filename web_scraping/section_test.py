@@ -53,6 +53,15 @@ class TestWebScraping(unittest.TestCase):
 
     # same section
     self.assertFalse(math241.get_section('ADA').has_time_conflict(math241.get_section('ADA')))
+  
+  def test_hash(self):
+    aas297 = Course("spring", "2022", "AAS297")
+    dictionary = {}
+    try:
+      section_a = aas297.get_section('A')
+      dictionary[section_a] = "hello world"
+    except:
+      self.fail("hash failed unexpectedly!")
  
 if __name__ == '__main__':
     unittest.main()
