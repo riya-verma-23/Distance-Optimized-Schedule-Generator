@@ -2,14 +2,22 @@ import requests
 import json
 from array import *
 import re
+import sys
+sys.path.insert(0, 'web_scraping')
+from course import Course
+import section
+sys.path.insert(1, 'schedule')
+from schedule import Schedule
+import itertools as it
 
 class Distance:
-		#dictionary {key = (section, section), value = distance}
+		#dictionary {key = (section index, section index), value = distance}
 	api_calls = {}
 
 #Demo Code from https://gist.github.com/olliefr/407c64413f61bd14e7af62fada6df866
 	#calls API and generates JSON file
 	def distance_matrix_file(origins, destinations):
+		print(origins, destinations)
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 		#reads in api key
 		api_key = ''
@@ -68,11 +76,32 @@ class Distance:
 		
 		return matrix
 	
+	def appendDictfromJSON(r, sections):
+		for i in range(len(sections)):
+			for j in range(len(sections)):
+				if (i != j):
+					dist_str = r.json()["rows"][i]["elements"][j]["distance"]["text"]
+					num = re.findall('\d*\.?\d+',dist_str)
+					#order tuple (sections[i], sections[j]) based on start time
+					if (sections[i].get_start() < sections[j].get_start()):
+						key = (sections[i], sections[j])
+					else:
+						key = (sections[j], sections[i])
+					if key in Distance.api_calls: #finding the minimum here
+						if float(num[0]) < Distance.api_calls[key]:
+							Distance.api_calls[key] = float(num[0])
+					else: Distance.api_calls[key] = float(num[0])
+					#print dictionary Distance.api_calls
+		for k, v in Distance.api_calls.items():
+			print(k[0].get_name(), k[1].get_name(), v)
+
 	#wrapper function that calls API and returns matrix of distances between each section
-	def get_distance_matrix(origins, destinations):
-		file = Distance.distance_matrix_file(origins, destinations)
-		matrix = Distance.generateMatrixfromJSON(file, len(origins), len(destinations))
-		return matrix
+	def append_to_dict(sections):
+		locations = []
+		for section in sections:
+			locations.append(section.get_location() + " UIUC")
+		file = Distance.distance_matrix_file(locations, locations)
+		Distance.appendDictfromJSON(file, sections)
 
 	#takes in a set of linked sections (list of lists) and calculates score on each day
 	def score(schedule):
@@ -85,25 +114,12 @@ class Distance:
 
 	#generates unique unordered tuples for sections in Day
 	def generate_tuple_sections(sectionsinDay):
-		#generates all tuples
-		all_tuples = [[s1, s2] for s1 in sectionsinDay for s2 in sectionsinDay if not(s1 == s2)]
-
-		#eliminates in repeat sections passed in
-		res = []
-		for section_tuple in all_tuples:
-			if not(section_tuple in res):
-				res.append(section_tuple)
-		all_tuples = res
-		#generates unordered tuples
-		res2 = []
-		tuples = []
-		for a in all_tuples:
-			for b in all_tuples:
-				if (a[0] == b[1]) & (a[1] == b[0]) & (not(a in res2)) & (not(b in res2)):
-					res2.append(a)
-					tuples.append(tuple(a))
+		sectionsinDay = list(dict.fromkeys(sectionsinDay)) #removes repeats
+		sectionsinDay = sorted(sectionsinDay, key=lambda x: x.start, reverse=False) #sort based on time
+		tuples = it.combinations(sectionsinDay, 2)
+		tuples = list(tuples)
 		return tuples
-
+		
 	#elimininates sections that has already been called by the API and returns list of sections to be called
 	def eliminate_sections(sectionsinDay):
 		tuples = Distance.generate_tuple_sections(sectionsinDay)
@@ -111,25 +127,27 @@ class Distance:
 		for t in tuples:
 			if not(t in Distance.api_calls):
 				if not(t[0] in res): res.append(t[0])
-				if not(t[1] in res):res.append(t[1])
+				if not(t[1] in res): res.append(t[1])
+		res = sorted(res, key=lambda x: x.start, reverse=False) #sort sections based on time
 		return res
 
 	#takes in an input of the sections on each day
 	def calculatePerimeterPerDay(sectionsinDay):
 		sections_to_call = Distance.eliminate_sections(sectionsinDay)
-		sections_already_called = [[s] for s in sectionsinDay if not(s in sections_to_call)]
-		locations = []
-		for section in sections_to_call:
-			locations.append(section.get_location() + " UIUC")
 		#append to api call
-		distance_matrix = Distance.get_distance_matrix(locations, locations)
-		print(distance_matrix)
+		if (len(sections_to_call) != 0): 
+			print("appended to dictionary in cppd")
+			Distance.append_to_dict(sections_to_call)
+		tuples = Distance.generate_tuple_sections(sectionsinDay)
+		print("tuples")
+		for t in tuples:
+			print(t[0].get_name(),t[1].get_name())
 
-		# perimeter = 0
-		# for i in range(len(distance_matrix) - 1):
-		# 	perimeter += distance_matrix[i][i+1]
-		# perimeter += distance_matrix[0][len(distance_matrix) - 1]
-		# return perimeter
+		perimeter = 0
+		for t in tuples:
+			perimeter += Distance.api_calls[t]
+		return perimeter
+
 
 	#generates all schedule combinations by picking one linked section from each class and storing those schedules as a matrix of ordered locations
 	#finding all possible combinations of linked sections => schedule
@@ -191,13 +209,3 @@ class Distance:
 	def scoreAllSchedules(all_schedules):
 		for schedule in all_schedules:
 			schedule.set_score(Distance.score(schedule))
-
-	#dictionary {key = (section, section), value = distance}
-	def append_api_calls(sections_to_call, matrix):
-		tuples = Distance.generate_tuple_sections(sections_to_call)
-		for t in tuples:
-			Distance.api_calls[t] = matrix[0][0]
-			#how to access the matrix accurately?
-
-	def get_distance(key):
-		return Distance.api_calls[key]
