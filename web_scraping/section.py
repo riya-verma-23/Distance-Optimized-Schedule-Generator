@@ -17,6 +17,15 @@ class Section:
   start: datetime object representing start time i.e. 08:00:00 or 00:00:00 for async
   end: datetime object representing end time i.e. 08:50:00 or 00:00:00 for async
   '''
+  # TODO: discuss how to organize files in repo
+  # TODO: more tests for schedule
+  # TODO: __init__.py? after merge all PRs
+  # TODO: semester, year boxes, combine course # and subj
+  # TODO: Nalin PR
+  # TODO: list of courses on frontend
+  # TODO: progress check in
+  # TODO: if each thing has a readme, why cs222 plan in github
+  # TODO: link frontend and backend this week
 
   # Initialize Section object given the section name, path to the section's xml file,
   # and its Course
@@ -117,3 +126,8 @@ class Section:
   # Get datetime obj representing end time
   def get_end(self):
     return self.end
+  
+  # Hash function for section (for dictionary used in distance matrix module)
+  def __hash__(self):
+      return hash((self.name, self.section_type, self.location,\
+       self.start.strftime("%H:%M"), self.end.strftime("%H:%M"), self.days, self.course))
