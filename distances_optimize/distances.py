@@ -54,6 +54,7 @@ class Distance:
 		return r
 
 	#From JSON file, function extracts a matrix of distances
+	#directly create dictionary instead of matrix
 	def generateMatrixfromJSON(r, origin_size, dest_size): 
 		matrix = []
 		for i in range(origin_size):
