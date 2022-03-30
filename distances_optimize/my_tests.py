@@ -2,8 +2,9 @@ import unittest
 import numpy as np
 import distances
 from distances import *
+import sys
+sys.path.insert(0, 'web_scraping')
 from course import Course
-import section
 
 def test_distance_matrix():
     locations = ["chicago", "hendrick house", "new york city", "san francisco"]
@@ -32,7 +33,7 @@ def test_generateScheduleCombinations():
     cs225 = Course("spring", "2022", "CS225")
     linkedsection1 = [math241.get_section("AL1"),math241.get_section("ADM")] 
     linkedsection2 = [cs225.get_section("AL2"),cs225.get_section("AYH")]
-    schedules = distances.Distance.generateScheduleCombinations([linkedsection1, linkedsection2])
+    schedules = distances.Distance.generateScheduleCombinations([math241, cs225])
 
 #print schedule combination names
     out = []

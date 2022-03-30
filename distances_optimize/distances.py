@@ -1,8 +1,6 @@
 import requests
 import json
 from array import *
-from course import Course
-import section
 import re
 
 class Distance:
@@ -10,9 +8,10 @@ class Distance:
 	api_calls = {}
 
 #Demo Code from https://gist.github.com/olliefr/407c64413f61bd14e7af62fada6df866
-
+	#calls API and generates JSON file
 	def distance_matrix_file(origins, destinations):
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
+		#reads in api key
 		api_key = ''
 		try:
 			with open('distances_optimize/api_key', 'r') as f:
@@ -54,20 +53,21 @@ class Distance:
 		print(r.text)
 		return r
 
+	#From JSON file, function extracts a matrix of distances
 	def generateMatrixfromJSON(r, origin_size, dest_size): 
 		matrix = []
 		for i in range(origin_size):
 			dist = []
 			for j in range(dest_size):
 				dist_str = r.json()["rows"][i]["elements"][j]["distance"]["text"]
-				#extract only integers from dist_str
 				num = re.findall('\d*\.?\d+',dist_str)
 				dist.append(float(num[0]))
 				print("\nThe distance is ", dist)
 			matrix.append(dist)
 		
 		return matrix
-
+	
+	#wrapper function that calls API and returns matrix of distances between each section
 	def get_distance_matrix(origins, destinations):
 		file = Distance.distance_matrix_file(origins, destinations)
 		matrix = Distance.generateMatrixfromJSON(file, len(origins), len(destinations))
@@ -115,22 +115,29 @@ class Distance:
 
 	#takes in an input of the sections on each day
 	def calculatePerimeterPerDay(sectionsinDay):
-		sectionsinDay = Distance.eliminate_sections(sectionsinDay)
+		sections_to_call = Distance.eliminate_sections(sectionsinDay)
+		sections_already_called = [[s] for s in sectionsinDay if not(s in sections_to_call)]
 		locations = []
-		for section in sectionsinDay:
+		for section in sections_to_call:
 			locations.append(section.get_location() + " UIUC")
+		#append to api call
 		distance_matrix = Distance.get_distance_matrix(locations, locations)
 		print(distance_matrix)
-		perimeter = 0
-		for i in range(len(distance_matrix) - 1):
-			perimeter += distance_matrix[i][i+1]
-		perimeter += distance_matrix[0][len(distance_matrix) - 1]
-		return perimeter
+
+		# perimeter = 0
+		# for i in range(len(distance_matrix) - 1):
+		# 	perimeter += distance_matrix[i][i+1]
+		# perimeter += distance_matrix[0][len(distance_matrix) - 1]
+		# return perimeter
 
 	#generates all schedule combinations by picking one linked section from each class and storing those schedules as a matrix of ordered locations
 	#finding all possible combinations of linked sections => schedule
 	def generateScheduleCombinations(courses):
 		n = len(courses)
+
+		ll = []
+		for course in courses:
+			ll.append(course.get_linked_sections())
 
 		all_schedule = [] #each schedule will be a set of linked sections, all schedules is all possible sets
 		indexes = []
@@ -143,14 +150,16 @@ class Distance:
 			schedule = [] 
 			#Append the courses given the index combination to generate a schedule
 			for i in range(n):
-				schedule.append(courses[i][indexes[i]])
-			all_schedule.append(schedule)
+				schedule.append(ll[i][indexes[i]])
+			
+			if (not(Schedule.has_time_conflict(schedule))):
+				all_schedule.append(schedule)
 			
 			#next is index of the last array
 			next = n - 1
 			
 			#sets it to the righmost array that has more elements left
-			while (next >= 0) & (indexes[next] + 1 >= len(courses[next])):
+			while (next >= 0) & (indexes[next] + 1 >= len(ll[next])):
 				next -= 1
 				
 			if next < 0:
@@ -177,6 +186,17 @@ class Distance:
 		
 		return best_schedule
 
+	#sets the score of each schedule
 	def scoreAllSchedules(all_schedules):
 		for schedule in all_schedules:
 			schedule.set_score(Distance.score(schedule))
+
+	#dictionary {key = (section, section), value = distance}
+	def append_api_calls(sections_to_call, matrix):
+		tuples = Distance.generate_tuple_sections(sections_to_call)
+		for t in tuples:
+			Distance.api_calls[t] = matrix[0][0]
+			#how to access the matrix accurately?
+
+	def get_distance(key):
+		return Distance.api_calls[key]
