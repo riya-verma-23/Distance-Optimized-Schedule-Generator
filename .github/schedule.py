@@ -90,10 +90,17 @@ class Schedule:
     def get_days_as_list(days):
         return [ day for day in days]
 
+    def has_time_conflict(self):
+        for i in range(0, len(self.linked_sections)):
+            for j in range(i, len(self.linked_sections)):
+                if (self.linked_sections[i].has_time_conflict(self.linked_sections[j])):
+                    return True
+        return False           
+
 math241 = Course("spring", "2022", "MATH241" )
 cs222 = Course("spring", "2022", "CS222" )
 cs225 = Course("spring", "2022", "CS225" )
-schedule = Schedule(math241.get_linked_sections())
+schedule = Schedule(cs225.get_linked_sections())
 # math241.get_linked_sections()
 schedule.split_sections_on_day()
 print(schedule.schedule)
