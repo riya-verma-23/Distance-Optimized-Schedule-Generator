@@ -19,9 +19,9 @@ class Schedule:
     '''
 
 # Initialize Schedule object given the score and linked_sections
-    def __init__(self, course):
+    def __init__(self, linked_sections):
         self.score = -9
-        self.linked_sections = course.get_linked_sections()
+        self.linked_sections = linked_sections
             
     # get score to compare schedule's for optimized distance and time    
     def get_score(self):
@@ -47,7 +47,6 @@ class Schedule:
     # returns a 2d list for daily schedule (which sections on each day)
     # each day's list consists of sections on that day 
     # the sections are sorted ascendingly using start_time
-
     def split_sections_on_day(self):
         schedule_result = [[], [], [], [], []]
         result = []
@@ -78,8 +77,6 @@ class Schedule:
             result.append(remove_duplicates)
         
         self.schedule = result
-        # print('\n')
-        # print(schedule_result)
 
     # returns the days that need to be calculated
     # removes all the day where there are repeats in the schedule
@@ -96,17 +93,10 @@ class Schedule:
 math241 = Course("spring", "2022", "MATH241" )
 cs222 = Course("spring", "2022", "CS222" )
 cs225 = Course("spring", "2022", "CS225" )
-schedule = Schedule(cs225)
-# print(math241.get_linked_sections())
+schedule = Schedule(math241.get_linked_sections())
+# math241.get_linked_sections()
 schedule.split_sections_on_day()
 print(schedule.schedule)
-# schedule.unique_days()
-# print(schedule.schedule)
-# print(len(schedule.schedule))
-# print(linked_sec)
-# for course in courses:
-        # for section in course.sections:
-        #     print(section.get_name())
 
 # to-do - rename github folder to schedule + read.me + relative path + test.py
 # write and test getters and setters for score and linkedsections
