@@ -3,7 +3,7 @@ import sys
 #     @"course-project-tyk-b/web_scraping",
 #     @"/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping");
 # sys.path.insert(1, relativePath)
-sys.path.insert(0, "web_scraping")
+sys.path.insert(0, 'web_scraping')
 
 from course import Course
 from section import Section
