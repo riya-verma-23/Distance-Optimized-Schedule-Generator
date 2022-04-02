@@ -6,7 +6,7 @@ import re
 import sys
 sys.path.insert(0, 'web_scraping')
 sys.path.insert(1, 'schedule')
-from schedule import *
+from schedule import Schedule
 
 '''
 This class is used to calculate the best distance optimized schedule
@@ -77,7 +77,7 @@ class Distance:
 						key = (sections[i], sections[j])
 					else:
 						key = (sections[j], sections[i])
-					if key in Distance.api_calls: #finding the minimum here
+					if key in Distance.api_calls: #finding the minimum distance between section A to section B and vice versa
 						if float(num[0]) < Distance.api_calls[key]:
 							Distance.api_calls[key] = float(num[0])
 					else: Distance.api_calls[key] = float(num[0])
@@ -151,8 +151,10 @@ class Distance:
 			for i in range(n):
 				schedule.append(ll[i][indexes[i]])
 			
-			if (not(Schedule.has_time_conflict(schedule))):
-				all_schedule.append(schedule)
+			s = Schedule(schedule)
+			
+			if (not(s.has_time_conflict())):
+				all_schedule.append(s)
 			
 			#next is index of the last array
 			next = n - 1
