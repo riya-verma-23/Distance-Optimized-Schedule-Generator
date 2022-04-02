@@ -92,7 +92,7 @@ class Schedule:
 
     def has_time_conflict(self):
         for i in range(0, len(self.linked_sections)):
-            for j in range(i, len(self.linked_sections)):
+            for j in range(0, len(self.linked_sections)):
                 if (self.linked_sections[i].has_time_conflict(self.linked_sections[j])):
                     return True
         return False           
