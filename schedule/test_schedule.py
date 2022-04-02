@@ -1,6 +1,6 @@
 
 import sys
-sys.path.insert(1, '/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping')
+sys.path.insert(0, 'web_scraping')
 from course import Course
 from section import Section
 from schedule import Schedule
@@ -10,7 +10,7 @@ class TestSchedule(unittest.TestCase):
   
     def test_linked_sectiions(self):
         math241 = Course("spring", "2022", "MATH241")
-        schedule = Schedule(math241)
+        schedule = Schedule(math241.get_linked_sections())
         math241_linked_sections = math241.get_linked_sections()
         self.assertEqual(schedule.linked_sections, math241_linked_sections)
   

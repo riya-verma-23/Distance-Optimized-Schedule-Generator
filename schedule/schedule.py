@@ -3,7 +3,7 @@ import sys
 #     @"course-project-tyk-b/web_scraping",
 #     @"/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping");
 # sys.path.insert(1, relativePath)
-sys.path.insert(0, 'web_scraping')
+sys.path.insert(1, "/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping")
 
 from course import Course
 from section import Section
@@ -76,7 +76,7 @@ class Schedule:
                     remove_duplicates.append(section)
             result.append(remove_duplicates)
         
-        self.schedule = result
+        return result
 
     # returns the days that need to be calculated
     # removes all the day where there are repeats in the schedule
@@ -99,11 +99,11 @@ class Schedule:
 
 math241 = Course("spring", "2022", "MATH241" )
 cs222 = Course("spring", "2022", "CS222" )
-cs225 = Course("spring", "2022", "CS225" )
-schedule = Schedule(cs225.get_linked_sections())
-# math241.get_linked_sections()
 
-print(schedule.has_time_conflict())
+# create CS225 course object and input its linked sections into Schedule
+cs225 = Course("spring", "2022", "CS225" )
+# schedule = Schedule(cs225.get_linked_sections())
+# print(schedule.split_sections_on_day())
 
 # to-do - rename github folder to schedule + read.me + relative path + test.py
 # write and test getters and setters for score and linkedsections
