@@ -26,8 +26,28 @@ from course import Course
 # actual = distances.Distance.calculatePerimeterPerDay(sectionsinDay=[cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG")])
 # print(actual)
 
+# math241 = Course("spring", "2022", "MATH241")
+# cs225 = Course("spring", "2022", "CS225")
+# schedules = distances.Distance.generate_schedule_combinations([math241, cs225])
+# print(len(schedules))
+
+# math241 = Course("spring", "2022", "MATH241")
+# cs225 = Course("spring", "2022", "CS225")
+# linkedsection1 = [math241.get_section("AL1"),math241.get_section("ADM")] 
+# linkedsection2 = [cs225.get_section("AL2"),cs225.get_section("AYH")]
+# schedules = distances.Distance.generate_schedule_combinations([linkedsection1, linkedsection2])
+# out = []
+# for i in range(len(schedules)):
+#     sch = []
+#     for j in range(len(schedules[i])):
+#         sch.append(schedules[i][j].get_name())
+#     out.append(sch)
+# print(out)
+
 math241 = Course("spring", "2022", "MATH241")
 cs225 = Course("spring", "2022", "CS225")
-schedules = distances.Distance.generate_schedule_combinations([math241, cs225])
-print(len(schedules))
-
+section1 = math241.get_section("AL1")
+section2 = cs225.get_section("AL2")
+section3 = math241.get_section("ADM")
+sectionsInDay = [section1, section2, section3]
+out = distances.Distance.generate_tuple_sections(sectionsInDay)

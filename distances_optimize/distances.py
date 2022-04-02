@@ -16,7 +16,7 @@ Output: a distance optimized Schedule Object that contains the linked sections t
 
 class Distance:
 	#dictionary {key = (section index, section index), value = distance}
-	api_calls = {}
+	api_calls = dict()
 
 	#Demo Code from https://gist.github.com/olliefr/407c64413f61bd14e7af62fada6df866
 	#calls API and generates JSON file with distances between origins and destinations
@@ -134,9 +134,10 @@ class Distance:
 	def generate_schedule_combinations(courses):
 		n = len(courses)
 
-		ll = []
-		for course in courses:
-			ll.append(course.get_linked_sections())
+		ll = courses
+		# for course in courses:
+		# 	#ll.append(course.get_linked_sections())
+		# 	ll.append(course)
 
 		all_schedule = [] #each schedule will be a set of linked sections, all schedules is all possible sets
 		indexes = []
@@ -151,10 +152,8 @@ class Distance:
 			for i in range(n):
 				schedule.append(ll[i][indexes[i]])
 			
-			s = Schedule(schedule)
-			
-			if (not(s.has_time_conflict())):
-				all_schedule.append(s)
+			# if (not(s.has_time_conflict())):
+			all_schedule.append(schedule)
 			
 			#next is index of the last array
 			next = n - 1

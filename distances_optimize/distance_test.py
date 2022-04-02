@@ -6,13 +6,8 @@ import sys
 sys.path.insert(0, 'web_scraping')
 from course import Course
 
-def test_generateScheduleCombinations_integers():
-    ans = [[1, 3, 5], [1, 3, 6], [1, 3, 7], [1, 4, 5], [1, 4, 6], [1, 4, 7], [2, 3, 5], [2, 3, 6], [2, 3, 7], [2, 4, 5], [2, 4, 6], [2, 4, 7]]
-    schedules = distances.Distance.generate_schedule_combinations([[1,2], [3,4], [5, 6, 7]])
-    np.testing.assert_array_equal(ans, schedules)
-    
 def test_calculatePerimeterPerDay():
-    ans = 4.3
+    ans = 3.6
     #example thursday schedule
     cs225 = Course("spring", "2022", "CS225")
     scan252 = Course("spring", "2022", "SCAN252")
@@ -26,8 +21,7 @@ def test_generateScheduleCombinations():
     cs225 = Course("spring", "2022", "CS225")
     linkedsection1 = [math241.get_section("AL1"),math241.get_section("ADM")] 
     linkedsection2 = [cs225.get_section("AL2"),cs225.get_section("AYH")]
-    schedules = distances.Distance.generate_schedule_combinations([math241, cs225])
-
+    schedules = distances.Distance.generate_schedule_combinations([linkedsection1, linkedsection2])
 #print schedule combination names
     out = []
     for i in range(len(schedules)):
@@ -41,23 +35,28 @@ def test_generateScheduleCombinations():
 
 
 def test_eliminate_sections():
-    ans = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 3), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5), (3, 6), (4, 5), (4, 6), (5, 6)] 
-    eliminate = distances.Distance.generate_tuple_sections([1,2,3,4,5,6])
-    np.testing.assert_array_equal(ans, eliminate)
-    ans = [(1, 2), (1, 3), (2, 3)]
-    eliminate = distances.Distance.generate_tuple_sections([1,1,1,2,3])
-    np.testing.assert_array_equal(ans, eliminate)
-    ans = [(3, 4), (3, 5), (4, 5)]
-    eliminate = distances.Distance.generate_tuple_sections([3,3,4,4,5,5])
-    np.testing.assert_array_equal(ans, eliminate)
-    distances.Distance.api_calls = {(1,2): 1.0, (1,3):2.0}
-    ans = [2,3]
-    actual = distances.Distance.eliminate_sections([1,1,1,2,3])
-    np.testing.assert_array_equal(ans, actual)
-    
+    math241 = Course("spring", "2022", "MATH241")
+    cs225 = Course("spring", "2022", "CS225")
+    linkedsection1 = [math241.get_section("AL1"),math241.get_section("ADM"), math241.get_section("AL1")] 
+    sections = [cs225.get_section("AL2"), math241.get_section("AL1"), math241.get_section("ADM")]
+    out = len(distances.Distance.eliminate_sections(sections))
+    ans = 3
+    np.testing.assert_array_equal(ans, out)
+
+def test_generate_tuples():
+    math241 = Course("spring", "2022", "MATH241")
+    cs225 = Course("spring", "2022", "CS225")
+    section1 = math241.get_section("AL1")
+    section2 = cs225.get_section("AL2")
+    section3 = math241.get_section("ADM")
+    sectionsInDay = [section1, section2, section3]
+    out = distances.Distance.generate_tuple_sections(sectionsInDay)
+    ans = [(section1, section2), (section1, section3), (section2, section3)]
+    np.testing.assert_array_equal(ans, out)
+
 if __name__ == "__main__":
     test_generateScheduleCombinations()
-    test_eliminate_sections()
+    test_generate_tuples()
     test_calculatePerimeterPerDay()
-    test_generateScheduleCombinations_integers()
     print("Everything passed")
+
