@@ -7,47 +7,85 @@ sys.path.insert(0, 'web_scraping')
 from course import Course
 
 
-# cs225 = Course("spring", "2022", "CS225")
-# scan252 = Course("spring", "2022", "SCAN252")
-# stat410 = Course("spring", "2022", "STAT410")
-# sectionsInDay = [stat410.get_section("1UG"), cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG"), scan252.get_section("C")]
-# sectionsInDay = list(dict.fromkeys(sectionsInDay)) #removes repeats
-# for s in sectionsInDay:
-#     print(s.get_name())
 
-# sectionsInDay = sorted(sectionsInDay, key=lambda x: x.start, reverse=False) #sort based on time
-# for s in sectionsInDay:
-#     print(s.get_name())
+#very simple 1 schedule generated
+cs211 = Course("fall", "2022", "CS211")
+cs340 = Course("fall", "2022", "CS340")
+schedules = distances.Distance.generate_schedule_combinations([cs211, cs340])
+out = []
+for i in range(len(schedules)):
+    sch = []
+    for ls in schedules[i].get_linked_sections():
+        ll = []
+        for s in ls:
+            ll.append(s.get_name() + " " + s.get_course())
+        sch.append(ll)
+    out.append(sch)
+print(out)
+print("schdules generated: ", len(schedules))
 
-# for t in distances.Distance.generate_tuple_sections(sectionsInDay):
-#     print(t[0].get_name(),t[1].get_name())
+cs225 = Course("fall", "2022", "CS225")
+math241 = Course("fall", "2022", "MATH241")
+schedules = distances.Distance.generate_schedule_combinations([cs225, math241])
+out = []
+for i in range(len(schedules)):
+    sch = []
+    for ls in schedules[i].get_linked_sections():
+        ll = []
+        for s in ls:
+            ll.append(s.get_name() + s.get_course())
+        sch.append(ll)
+    out.append(sch)
+print(out)
+print("schdules generated: ", len(schedules))
 
-# distances.Distance.append_to_dict([cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG")])
-# actual = distances.Distance.calculatePerimeterPerDay(sectionsinDay=[cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG")])
-# print(actual)
 
-# math241 = Course("spring", "2022", "MATH241")
-# cs225 = Course("spring", "2022", "CS225")
-# schedules = distances.Distance.generate_schedule_combinations([math241, cs225])
-# print(len(schedules))
+#16 expected from schedule generator: generate all possible schedules - NO possible time conflicts (all sections work)
+stat410 = Course("fall", "2022", "STAT410")
+cs411 = Course("fall", "2022", "CS411")
+schedules = distances.Distance.generate_schedule_combinations([stat410, cs411])
+for i in range(len(schedules)):
+    sch = []
+    for ls in schedules[i].get_linked_sections():
+        ll = []
+        for s in ls:
+            ll.append(s.get_name() +  " " + s.get_course())
+        sch.append(ll)
+    print(sch)
+print("schedules generated: ", len(schedules))
 
-# math241 = Course("spring", "2022", "MATH241")
-# cs225 = Course("spring", "2022", "CS225")
-# linkedsection1 = [math241.get_section("AL1"),math241.get_section("ADM")] 
-# linkedsection2 = [cs225.get_section("AL2"),cs225.get_section("AYH")]
-# schedules = distances.Distance.generate_schedule_combinations([linkedsection1, linkedsection2])
-# out = []
-# for i in range(len(schedules)):
-#     sch = []
-#     for j in range(len(schedules[i])):
-#         sch.append(schedules[i][j].get_name())
-#     out.append(sch)
-# print(out)
 
-math241 = Course("spring", "2022", "MATH241")
-cs225 = Course("spring", "2022", "CS225")
-section1 = math241.get_section("AL1")
-section2 = cs225.get_section("AL2")
-section3 = math241.get_section("ADM")
-sectionsInDay = [section1, section2, section3]
-out = distances.Distance.generate_tuple_sections(sectionsInDay)
+#should generate 22 schedules with 2 time conflicts
+
+mus132 = Course("fall", "2022", "MUS132")
+mus243 = Course("fall", "2022", "MUS243")
+
+print("mus132")
+for l in mus132.get_sections():
+    print(l.get_name())
+print("mus243")
+for l in mus243.get_sections():
+    print(l.get_name())
+
+print("mus132 linked sections")
+for ll in mus132.get_linked_sections():
+    l = []
+    for s in ll:
+        l.append(s.get_name())
+    print(l)
+
+
+schedules = distances.Distance.generate_schedule_combinations([mus132, mus243])
+for i in range(len(schedules)):
+    sch = []
+    for ls in schedules[i].get_linked_sections():
+        ll = []
+        for s in ls:
+            ll.append(s.get_name() + s.get_course())
+        sch.append(ll)
+    print(sch)
+
+print("schdules generated: ", len(schedules))
+
+
+

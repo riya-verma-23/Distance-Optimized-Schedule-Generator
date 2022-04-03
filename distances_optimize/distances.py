@@ -134,11 +134,10 @@ class Distance:
 	def generate_schedule_combinations(courses):
 		n = len(courses)
 
-		ll = courses
-		# for course in courses:
-		# 	#ll.append(course.get_linked_sections())
-		# 	ll.append(course)
-
+		ll = []
+		for course in courses:
+			ll.append(course.get_linked_sections())
+	
 		all_schedule = [] #each schedule will be a set of linked sections, all schedules is all possible sets
 		indexes = []
 
@@ -152,8 +151,13 @@ class Distance:
 			for i in range(n):
 				schedule.append(ll[i][indexes[i]])
 			
-			# if (not(s.has_time_conflict())):
-			all_schedule.append(schedule)
+			s = Schedule(schedule)
+
+			tc = []
+			if (not(s.has_time_conflict())):
+				all_schedule.append(s)
+			else:
+				tc.append(s)
 			
 			#next is index of the last array
 			next = n - 1
@@ -171,7 +175,7 @@ class Distance:
 			#set all points to 0 after
 			for i in range((next+1), n, 1):
 				indexes[i] = 0
-			
+
 		return all_schedule
 
 	#sets the score of all valid schedules
@@ -198,3 +202,21 @@ class Distance:
 				min = val
 				best_schedule = schedule
 		return best_schedule
+	
+	def print_time_conflicts(schedules):
+			out = []
+			for i in range(len(schedules)):
+				sch = []
+				for ls in schedules[i].get_linked_sections():
+					ll = []
+					for s in ls:
+						ll.append(s.get_name() + " " + s.get_course())
+					sch.append(ll)
+				out.append(sch)
+			print(out)
+
+	def count_tc(schedules):
+		count = 0
+		for schedule in schedules:
+			if schedule.has_time_conflict(): count += 1
+		return count
