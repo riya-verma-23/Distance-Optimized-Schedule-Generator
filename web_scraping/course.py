@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 from section import Section
 import re
 import requests
@@ -8,19 +8,25 @@ class Course:
   '''
   Creates a Course object
   
-  Member variables:
+  Instance variables:
   page: the Course's xml file as a string
   sections: dictionary of the sections, where the key is section name
   subject: i.e. MATH
   num: i.e. 241
   semester: i.e. spring
   year: i.e. 2022
+
+  Static variables:
+  strainer: SoupStrainer("section") is an object that restricts how much of a page is
+            parsed into a BeautifulSoup object, which can make parsing faster
   '''
+  strainer = SoupStrainer("section")
   
   # Get course page using semester, year, and already init subject and number
   def get_page(self, semester, year):
-    path = "https://courses.illinois.edu/cisapp/explorer/schedule/" + year +\
-     "/" + semester.lower() + "/" + self.subject + "/" + self.num + ".xml"
+    path = ("https://courses.illinois.edu/cisapp/explorer/schedule/" + year +  "/" + 
+    semester.lower() + "/" + self.subject + "/" + self.num + ".xml")
+
     response = requests.get(path)
     self.page = response.text
     if not len(self.page):
@@ -28,11 +34,11 @@ class Course:
   
   # Init the sections dictionary using each course's XML file
   def init_sections(self):
-    soup = BeautifulSoup(self.page, "lxml-xml")
+    soup = BeautifulSoup(self.page, "lxml-xml", parse_only=Course.strainer)
     self.sections = {}
     for section in soup.findAll("section"):
       section_str = section.string.strip()
-      self.sections[section_str] = Section(section_str, section.get('href'), self)
+      self.sections[section_str] = Section(section_str, section.get('href'), self.subject + self.num)
 
 
   # Initialize Course object given the semester, year, and course number
@@ -50,8 +56,8 @@ class Course:
   
   # Check if two courses are equal
   def __eq__(self, other):
-    return self.subject == other.get_subject() and self.num == other.get_number() and\
-     self.semester == other.get_semester() and self.year == other.get_year()
+    return (self.subject == other.get_subject() and self.num == other.get_number() and
+     self.semester == other.get_semester() and self.year == other.get_year())
 
   # Takes all sections from dictionary and splits it based on type
   # Discussion = [ section A, section B ]
@@ -99,7 +105,6 @@ class Course:
   def get_linked_sections(self):
     linked_sections = []
 
-    # TODO: optimize
     sections_by_type = self.split_sections_on_type()
     sorted_sections = sorted(sections_by_type)
     
@@ -145,6 +150,7 @@ class Course:
     
     # check if two LinkedSections are equal
     def __eq__(self, other):
+      
       if len(self.sections) != len(other):
         return False
       
@@ -153,9 +159,6 @@ class Course:
           return False
       
       return True
-    
-    def get_days(self):
-      self.days = ""
 
     # check two LinkedSections have a time conflict
     def has_time_conflict(self, other):
@@ -174,6 +177,7 @@ class Course:
       return self.sections[section_name]
     except:
       raise KeyError("not a section")
+  
 
   # Get course subject
   def get_subject(self):

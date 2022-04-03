@@ -17,20 +17,11 @@ class Section:
   start: datetime object representing start time i.e. 08:00:00 or 00:00:00 for async
   end: datetime object representing end time i.e. 08:50:00 or 00:00:00 for async
   '''
-  # TODO: discuss how to organize files in repo
-  # TODO: more tests for schedule
-  # TODO: __init__.py? after merge all PRs
-  # TODO: semester, year boxes, combine course # and subj
-  # TODO: Nalin PR
-  # TODO: list of courses on frontend
-  # TODO: progress check in
-  # TODO: if each thing has a readme, why cs222 plan in github
-  # TODO: link frontend and backend this week
 
   # Initialize Section object given the section name, path to the section's xml file,
   # and its Course
-  def __init__(self, name, section_path, course):
-    self.course = course.subject + course.num
+  def __init__(self, name, section_path, course_str):
+    self.course = course_str
     self.name = name
     self.init_location(section_path)
 
@@ -85,8 +76,9 @@ class Section:
   # If one starts between the other's start and end times, there's a time conflict
   # A section cannot have a time conflict with itself
   def has_time_conflict(self, other_section):
-    if self != other_section and\
-     (self.days in other_section.get_days() or other_section.get_days() in self.days):
+    if (self != other_section and 
+    (self.days in other_section.get_days() or other_section.get_days() in self.days)):
+      
       if self.start >= other_section.start and self.start <= other_section.end:
         return True
       if other_section.start >= self.start and other_section.start <= self.end:
@@ -96,8 +88,8 @@ class Section:
   # Determine whether two sections are linked
   # If two sections belong to the same course and have the same first letter, they're linked
   def linked(self, other_section):
-    return (self.course == other_section.course) and\
-     (self.name[0] == other_section.get_name()[0])
+    return ((self.course == other_section.course) and 
+    (self.name[0] == other_section.get_name()[0]))
   
   # Get course name this section belongs to 
   def get_course(self):
@@ -129,5 +121,5 @@ class Section:
   
   # Hash function for section (for dictionary used in distance matrix module)
   def __hash__(self):
-      return hash((self.name, self.section_type, self.location,\
-       self.start.strftime("%H:%M"), self.end.strftime("%H:%M"), self.days, self.course))
+      return (hash((self.name, self.section_type, self.location,
+       self.start.strftime("%H:%M"), self.end.strftime("%H:%M"), self.days, self.course)))
