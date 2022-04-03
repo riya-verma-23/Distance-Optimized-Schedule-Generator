@@ -24,7 +24,7 @@ from within the virtual environment <sup>*</sup>
 And simply running
 
 ```
-python manage.py runserver
+python manage.py
 ```
 will give you a list of commands 'manage.py' can run
 

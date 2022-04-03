@@ -52,6 +52,7 @@
     </section>
 
     <!-- Schedule -->
+    {% if classes %}
     <section class="schedule" id="schedule">
         <div class="max-width">
             <p>Here is your Distance Optimized Schedule:</p>
@@ -63,25 +64,14 @@
                 </div>
                 <table>
                     <tr>
-                        <th>{{class_1}}</th>
-                        <th>{{class_2}}</th>
-                        <th>{{class_3}}</th>
-                        <th>{{class_4}}</th>
-                        <th>{{class_5}}</th>
+                        {% for class in classes %}
+                        <th>{{class}}</th>
+                        {% endfor %}
                     </tr>
                     <tr>
-                        <td>{{section_1_1}}</td>
-                        <td>{{section_2_1}}</td>
-                        <td>{{section_3_1}} </td>
-                        <td>{{section_4_1}}</td>
-                        <td>{{section_5_1}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{section_1_2}}</td>
-                        <td>{{section_2_2}}</td>
-                        <td>{{section_3_2}} </td>
-                        <td>{{section_4_2}}</td>
-                        <td>{{section_5_2}}</td>
+                        {% for section in sections %}
+                        <td>{{section}}</td>
+                        {% endfor %}
                     </tr>
                 </table>
             </div>
@@ -147,6 +137,7 @@
             </div> -->
         </div>
     </section>
+    {% endif %}
 
 </body>
 
