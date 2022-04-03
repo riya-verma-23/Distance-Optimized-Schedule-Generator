@@ -1,9 +1,5 @@
 import sys
-# var relativePath = Path.GetRelativePath(
-#     @"course-project-tyk-b/web_scraping",
-#     @"/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping");
-# sys.path.insert(1, relativePath)
-sys.path.insert(1, "/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping")
+sys.path.insert(0, "web_scraping")
 
 from course import Course
 from section import Section
@@ -55,15 +51,15 @@ class Schedule:
         for linked_section in self.linked_sections:
             for section in linked_section:
                 if "M" in section.get_days():
-                    schedule_result[0].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[0].append(tuple((section, section.get_start())))
                 if "T" in section.get_days():
-                    schedule_result[1].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[1].append(tuple((section, section.get_start())))
                 if "W" in section.get_days():
-                    schedule_result[2].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[2].append(tuple((section, section.get_start())))
                 if "R" in section.get_days():
-                    schedule_result[3].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[3].append(tuple((section, section.get_start())))
                 if "F" in section.get_days():
-                    schedule_result[4].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[4].append(tuple((section, section.get_start())))
 
         for day in schedule_result:
             day.sort(key=lambda a: a[1])
@@ -90,22 +86,26 @@ class Schedule:
     def get_days_as_list(days):
         return [ day for day in days]
 
+    # returns whether there is a time conflict between any two sections in the list
     def has_time_conflict(self):
         for i in range(0, len(self.linked_sections)):
             for j in range(0, len(self.linked_sections)):
                 if (self.linked_sections[i].has_time_conflict(self.linked_sections[j])):
                     return True
-        return False           
+        return False    
 
-math241 = Course("spring", "2022", "MATH241" )
-cs222 = Course("spring", "2022", "CS222" )
+    # returns locations of all classes in the schedule
+    def return_locations(self):
+        result = []
+        schedule = self.split_sections_on_day()
+        for day in schedule:
+            locations = []
+            for section in day:
+                if section.get_location() not in locations:
+                    locations.append(section.get_location())
+            result.append(locations)
+        return result
 
-# create CS225 course object and input its linked sections into Schedule
-cs225 = Course("spring", "2022", "CS225" )
-# schedule = Schedule(cs225.get_linked_sections())
-# print(schedule.split_sections_on_day())
-
-# to-do - rename github folder to schedule + read.me + relative path + test.py
-# write and test getters and setters for score and linkedsections
-# write comments 
-# PR message to write how to test
+# cs225 = Course("spring", "2022", "CS225" )
+# schedule =  Schedule(cs225.get_linked_sections())
+# print(schedule.return_locations())
