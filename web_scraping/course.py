@@ -15,7 +15,6 @@ class Course:
   num: i.e. 241
   semester: i.e. spring
   year: i.e. 2022
-
   Static variables:
   strainer: SoupStrainer("section") is an object that restricts how much of a page is
             parsed into a BeautifulSoup object, which can make parsing faster
@@ -59,6 +58,28 @@ class Course:
     return (self.subject == other.get_subject() and self.num == other.get_number() and
      self.semester == other.get_semester() and self.year == other.get_year())
 
+  # Determines if the current section type is in the dictionary
+  # if it is, return the section name corresponding to this type
+  # otherwise, return empty string
+  # Example: MUS132 has types Online Discussion and Discussion/Recitation
+  # The key_in_dict('Online Discussion', sections_by_type) -> 'Discussion/Recitation'
+  # key_in_dict('Lecture', sections_by_type) -> ''
+  def key_in_dict(self, section_type, sections_by_type):
+    # Get list of words in section_type
+    words_in_section = re.findall(r'\b\w+\b', section_type)
+
+    # If any of the words in this section's name are in another section name,
+    # they are the same section type
+    # TODO: is this true? is there ever 'Discussion/Recitation' and 'Laboratory/Discussion'?
+    # if so should this be hardcoded to handle a set of section types that courses are
+    # restricted to?
+    for section in sections_by_type:
+      if(any([word in section for word in words_in_section])):
+        return section
+    return ""
+      
+
+
   # Takes all sections from dictionary and splits it based on type
   # Discussion = [ section A, section B ]
   # Lecture = [ section C, section D ]
@@ -71,8 +92,9 @@ class Course:
       section = self.sections[section_name]
       section_type = section.get_type()
       
-      if section_type in sections_by_type:
-        sections_by_type[section_type].append(section)
+      key = self.key_in_dict(section_type,sections_by_type)
+      if len(key):
+        sections_by_type[key].append(section)
       else:
         sections_by_type[section_type] = [section]
 
