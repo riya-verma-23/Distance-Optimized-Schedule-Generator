@@ -21,8 +21,7 @@ def generateMapAPITwo(locations):
     labels = ["&markers=color:gray%7Clabel:1%7C","&markers=color:green%7Clabel:2%7C", "&markers=color:orange%7Clabel:3%7C", "&markers=color:purple%7Clabel:4%7C", "&markers=color:red%7Clabel:5%7C", "&markers=color:white%7Clabel:6%7C", "&markers=color:yellow%7Clabel:7%7C",  "&markers=color:black%7Clabel:8%7C",  "&markers=color:blue%7Clabel:9%7C"]
     for i in range(len(adjusted_locations)):
         markers += labels[i] + adjusted_locations[i]
-    # return "https://maps.googleapis.com/maps/api/staticmap?size=600x300" + "&markers=color:orange%7Clabel:1%7C" +adjusted_locations[0]+  "&markers=color:red%7Clabel:2%7C" +adjusted_locations[1]+"&markers=color:purple%7Clabel:3%7C" +adjusted_locations[2]+ "&markers=color:blue%7Clabel:4%7C" + adjusted_locations[3]+"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA"
-    # return "https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers[0] +  markers[1] + markers[2] + markers[3] +"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA"
+    
     return "https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers +"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA"
  #<img src = generateMapAPI()>
 
