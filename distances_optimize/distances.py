@@ -152,12 +152,8 @@ class Distance:
 				schedule.append(ll[i][indexes[i]])
 			
 			s = Schedule(schedule)
-
-			tc = []
 			if (not(s.has_time_conflict())):
 				all_schedule.append(s)
-			else:
-				tc.append(s)
 			
 			#next is index of the last array
 			next = n - 1
@@ -215,8 +211,47 @@ class Distance:
 				out.append(sch)
 			print(out)
 
-	def count_tc(schedules):
-		count = 0
-		for schedule in schedules:
-			if schedule.has_time_conflict(): count += 1
-		return count
+	def count_tc(courses):
+		n = len(courses)
+		count_tc = 0
+
+		ll = []
+		for course in courses:
+			ll.append(course.get_linked_sections())
+	
+		indexes = []
+
+		#initialize indexes to first combination (0, 0, 0)
+		for i in range(n):
+			indexes.append(0)
+
+		while (1):
+			schedule = [] 
+			#Append the courses given the index combination to generate a schedule
+			for i in range(n):
+				schedule.append(ll[i][indexes[i]])
+			
+			s = Schedule(schedule)
+
+			
+			if s.has_time_conflict():
+				count_tc += 1
+			
+			#next is index of the last array
+			next = n - 1
+			
+			#sets it to the righmost array that has more elements left
+			while (next >= 0) & (indexes[next] + 1 >= len(ll[next])):
+				next -= 1
+				
+			if next < 0:
+				break
+			
+			#increments the index when more elements are left
+			indexes[next] = indexes[next] + 1
+
+			#set all points to 0 after
+			for i in range((next+1), n, 1):
+				indexes[i] = 0
+
+		return count_tc

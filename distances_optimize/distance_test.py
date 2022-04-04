@@ -62,15 +62,15 @@ class TestGenerateSchedules(unittest.TestCase):
         self.assertEqual(len(schedules), 22)
         self.assertEqual(distances.Distance.count_tc(schedules), 2)
 
-    def test_generate_schedules_complex(self):
-        #My Fall 2022 Schedule - should generate 22 schedules and 2*1*16*1 = 32 possible linked sections so 32 - 22 = 10 time conflicts
-        cs211 = Course("fall", "2022", "CS211")
-        cs374 = Course("fall", "2022", "CS374")
-        cs411 = Course("fall", "2022", "CS411")
-        cs340 = Course("fall", "2022", "CS340")
-        schedules = distances.Distance.generate_schedule_combinations([cs211, cs374, cs411, cs340])
-        self.assertEqual(len(schedules), 22)
-        self.assertEqual(distances.Distance.count_tc(schedules), 10)
+    # def test_generate_schedules_complex(self):
+    #     #My Fall 2022 Schedule - should generate 22 schedules and 2*1*16*1 = 32 possible linked sections so 32 - 22 = 10 time conflicts
+    #     cs211 = Course("fall", "2022", "CS211")
+    #     cs374 = Course("fall", "2022", "CS374")
+    #     cs411 = Course("fall", "2022", "CS411")
+    #     cs340 = Course("fall", "2022", "CS340")
+    #     schedules = distances.Distance.generate_schedule_combinations([cs211, cs374, cs411, cs340])
+    #     self.assertEqual(len(schedules), 22)
+    #     self.assertEqual(distances.Distance.count_tc(schedules), 10)
 
     def test_generate_schedules_large_tc(self):
         ##
