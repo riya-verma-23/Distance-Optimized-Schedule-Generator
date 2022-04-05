@@ -72,12 +72,23 @@ class Section:
     except:
       self.end = datetime.datetime.strptime("00:00:00", '%H:%M:%S')
   
+  # Determine if there's an overlap in days between two sections
+  # Fixing bug in Section has_time_conflict
+  # Example: one course has WF, other MW. Before this change, 
+  # this days overlap would not be detected
+  def days_overlap(days, days1):
+    if days == days1:
+      return True
+    for day in days:
+      if day in days1:
+        return True
+    return False
+
   # Get whether two sections have a time conflict
   # If one starts between the other's start and end times, there's a time conflict
   # A section cannot have a time conflict with itself
   def has_time_conflict(self, other_section):
-    if (self != other_section and 
-    (self.days in other_section.get_days() or other_section.get_days() in self.days)):
+    if (self != other_section and Section.days_overlap(self.get_days(), other_section.get_days())):
       
       if self.start >= other_section.start and self.start <= other_section.end:
         return True
