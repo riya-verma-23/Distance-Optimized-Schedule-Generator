@@ -29,10 +29,6 @@ class Distance:
 		origins = [origins_str]
 		destinations = [destinations_str]
 
-		print(origins, destinations)
-		print(type(origins), type(destinations))
-		print(len(origins), len(destinations))
-
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 		#reads in api key
 		api_key = ''
@@ -41,7 +37,6 @@ class Distance:
 				api_key = f.read().strip()
 		except FileNotFoundError:
 			print("'%s' file not found" % 'api_key')
-		print(api_key)
 
 		payload = {
 				'origins' : '|'.join(origins),
@@ -145,14 +140,12 @@ class Distance:
 		tuples = Distance.generate_tuple_sections(sectionsinDay)
 		perimeter = 0
 		for t in tuples:
-			print("tuples len: ", len(tuples))
 			t_loc_1 = (t[0].get_location(), t[1].get_location())
 			t_loc_2 = (t[1].get_location(), t[0].get_location())
 			if (t_loc_1 in Distance.api_calls):
 				perimeter += Distance.api_calls[t_loc_1]
 			elif (t_loc_2 in Distance.api_calls):
 				perimeter += Distance.api_calls[t_loc_2]
-		print('p: ', perimeter)
 		return perimeter
 
 	#generates all valid schedule combinations without time conflicts by picking one linked section from each course
@@ -202,8 +195,15 @@ class Distance:
 	#sets the score of all valid schedules
 	def score_all_schedules(all_schedules):
 		for schedule in all_schedules: 
-			print("score:", Distance.score(schedule))
 			schedule.set_score(Distance.score(schedule))
+			print("score:", Distance.score(schedule))
+			sch = []
+			for ls in schedule.get_linked_sections():
+				ll = []
+				for s in ls:
+					ll.append(s.get_name() + " " + s.get_course())
+				sch.append(ll)
+			print(sch)
 	
 	# user will input in the course names they are taking
 	# course name is used to create a list of course objects which is passed into best_schedule
@@ -219,11 +219,19 @@ class Distance:
 		Distance.score_all_schedules(all_schedules)
 		min = 1000000000.0
 		best_schedule = []
+		scores = []
 		for schedule in all_schedules:
 			val = schedule.get_score()
+			scores.append(val)
 			if val <= min:
 				min = val
-				best_schedule = schedule
+		#find all indices of the schedules with the min score
+		print(len(scores))
+		for i in range(len(scores)):
+			if scores[i] == min:
+				best_schedule.append(all_schedules[i])
+
+		print(type(best_schedule))
 		return best_schedule
 	
 	def print_time_conflicts(schedules):
@@ -262,7 +270,6 @@ class Distance:
 
 			
 			if s.has_time_conflict():
-				print("count", count_tc)
 				count_tc += 1
 			
 			#next is index of the last array
@@ -286,7 +293,7 @@ class Distance:
 	
 	#print items in api_call dictionary
 	def print_dictionary():
-		print("dictionayr")
+		print("Dictionary")
 		print(len(Distance.api_calls))
 		for key, value in Distance.api_calls.items():
 			print(key, value)

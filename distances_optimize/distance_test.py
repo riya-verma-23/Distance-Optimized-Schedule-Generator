@@ -92,15 +92,15 @@ class TestGenerateSchedules(unittest.TestCase):
         self.assertEqual(len(schedules), 16)
         self.assertEqual(distances.Distance.count_tc([cs512, cs340, cs411, cs420]),0)
         best_schedule = distances.Distance.best_schedule(courses=[cs512, cs340, cs411, cs420, cs173])
-        sch = []
-        print("best schedule")
-        for ls in best_schedule.get_linked_sections():
-            ll = []
-            for s in ls:
-                ll.append(s.get_name() + " " + s.get_course())
-            sch.append(ll)
-        print(sch)
-        print("best score: ", best_schedule.get_score())
+        for s in best_schedule:
+            sch = []
+            print("best score: ", s.get_score())
+            for ls in s.get_linked_sections():
+                ll = []
+                for s in ls:
+                    ll.append(s.get_name() + " " + s.get_course())
+                sch.append(ll)
+            print(sch)
         distances.Distance.print_dictionary()
 
     # def test_best_schedule_med(self):
