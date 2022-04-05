@@ -6,6 +6,7 @@ import sys
 sys.path.insert(0, 'web_scraping')
 from course import Course
 from section import Section
+import re
 
 
 
@@ -80,10 +81,10 @@ from section import Section
 
 # print("schdules generated: ", len(schedules))
 
-cs211 = Course("fall", "2022", "CS211")
-cs374 = Course("fall", "2022", "CS374")
-cs411 = Course("fall", "2022", "CS411")
-cs340 = Course("fall", "2022", "CS340")
+# cs211 = Course("fall", "2022", "CS211")
+# cs374 = Course("fall", "2022", "CS374")
+# cs411 = Course("fall", "2022", "CS411")
+# cs340 = Course("fall", "2022", "CS340")
 
 # schedules = distances.Distance.generate_schedule_combinations([cs211, cs374, cs411, cs340])
 # print(len(schedules)) #
@@ -98,3 +99,32 @@ cs340 = Course("fall", "2022", "CS340")
 #         sch.append(ll)
 #     print(sch)
 
+#your task is to find a two classes with one section available that are on the same day
+#cs340 TR
+#cs512 TR
+#cs556 TR
+#cs567 TR
+#cs549 TR
+
+# dist_str = '88 m'
+# num = 0
+# if(dist_str.find("km") == -1):
+#     num = re.findall('\d*\.?\d+',dist_str)
+#     num = float(num[0])*0.001
+# else:
+#     num = re.findall('\d*\.?\d+',dist_str)
+#     num = float(num[0])
+
+# print(num)
+
+
+cs512 = Course("fall", "2022", "CS512")
+cs340 = Course("fall", "2022", "CS340")
+cs411 = Course("fall", "2022", "CS411")
+cs420 = Course("fall", "2022", "CS420")
+cs173 = Course("fall", "2022", "CS173")
+#classes are on different days so score is 0 and only 1 schedule generated
+schedules = distances.Distance.generate_schedule_combinations([cs512, cs340, cs411, cs420, cs173])
+print(len(schedules))
+print(distances.Distance.count_tc([cs512, cs340, cs411, cs420]))
+        

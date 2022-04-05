@@ -1,10 +1,7 @@
 import sys
-# var relativePath = Path.GetRelativePath(
-#     @"course-project-tyk-b/web_scraping",
-#     @"/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping");
-# sys.path.insert(1, relativePath)
-sys.path.insert(1, "/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping")
-
+sys.path.insert(0, 'web_scraping')
+from course import Course
+from section import Section
 from course import Course
 from section import Section
 # class maintaining the Schedule 
@@ -55,15 +52,15 @@ class Schedule:
         for linked_section in self.linked_sections:
             for section in linked_section:
                 if "M" in section.get_days():
-                    schedule_result[0].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[0].append(tuple((section, section.get_start())))
                 if "T" in section.get_days():
-                    schedule_result[1].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[1].append(tuple((section, section.get_start())))
                 if "W" in section.get_days():
-                    schedule_result[2].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[2].append(tuple((section, section.get_start())))
                 if "R" in section.get_days():
-                    schedule_result[3].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[3].append(tuple((section, section.get_start())))
                 if "F" in section.get_days():
-                    schedule_result[4].append(tuple((section.get_name(), section.get_start())))
+                    schedule_result[4].append(tuple((section, section.get_start())))
 
         for day in schedule_result:
             day.sort(key=lambda a: a[1])
@@ -97,11 +94,11 @@ class Schedule:
                     return True
         return False           
 
-math241 = Course("spring", "2022", "MATH241" )
-cs222 = Course("spring", "2022", "CS222" )
+# math241 = Course("spring", "2022", "MATH241" )
+# cs222 = Course("spring", "2022", "CS222" )
 
-# create CS225 course object and input its linked sections into Schedule
-cs225 = Course("spring", "2022", "CS225" )
+# # create CS225 course object and input its linked sections into Schedule
+# cs225 = Course("spring", "2022", "CS225" )
 # schedule = Schedule(cs225.get_linked_sections())
 # print(schedule.split_sections_on_day())
 
