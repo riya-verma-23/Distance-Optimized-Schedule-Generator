@@ -16,6 +16,9 @@ class Section:
   days: days the Section meets. i.e. MWF, TR or ASYNC for async section
   start: datetime object representing start time i.e. 08:00:00 or 00:00:00 for async
   end: datetime object representing end time i.e. 08:50:00 or 00:00:00 for async
+  term: term this Section is part of i.e. 1 = whole semester, A = 1st 8 weeks,
+        B = last 8 weeks, N/A means no value provided
+        src: https://registrar.illinois.edu/academic-calendars/academic-calendars-archive/fall-2021-academic-calendar/
   '''
 
   # Initialize Section object given the section name, path to the section's xml file,
@@ -71,6 +74,12 @@ class Section:
       self.end = datetime.datetime.strptime(end[0].string, '%I:%M %p')
     except:
       self.end = datetime.datetime.strptime("00:00:00", '%H:%M:%S')
+    
+    term = soup.findAll("partOfTerm")
+    if(len(term)):
+      self.term = term[0].string
+    else:
+      self.term = "N/A"
   
   # Determine if there's an overlap in days between two sections
   # Fixing bug in Section has_time_conflict
@@ -129,6 +138,10 @@ class Section:
   # Get datetime obj representing end time
   def get_end(self):
     return self.end
+  
+  # Get term: "1", "A", "B", or "N/A"
+  def get_term(self):
+    return self.term
   
   # Hash function for section (for dictionary used in distance matrix module)
   def __hash__(self):
