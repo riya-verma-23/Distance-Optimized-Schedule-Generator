@@ -66,7 +66,7 @@ class TestWebScraping(unittest.TestCase):
     section_ls_1 = [math241_adb, math241_adb]
     self.assertFalse(aas297.has_time_conflict(section_ls_1))
   
-  def test_section_ls_time_confict_complex(self):
+  def test_section_ls_time_conflict_complex(self):
 
     aas297 = Course("spring", "2022", "AAS297")
 
@@ -131,6 +131,15 @@ class TestWebScraping(unittest.TestCase):
     self.assertEqual(ans[0], linked_section_ls[0])
     self.assertEqual(ans[1], linked_section_ls[1])
   
+  def test_linked_sections_simple_1(self):
+    scan251 = Course("fall", "2022", "SCAN251")
+    linked_section_ls = scan251.get_linked_sections()
+    self.assertEqual(len(linked_section_ls[0]), 2)
+  
+  def test_linked_sections_simple_2(self):
+    aas310 = Course("fall", "2022", "AAS310")
+    linked_section_ls = aas310.get_linked_sections()
+    self.assertNotEqual(len(linked_section_ls), 0)
 
   def test_linked_sections_complex(self):
     math241 = Course("spring", "2022", "MATH241")
@@ -165,12 +174,12 @@ class TestWebScraping(unittest.TestCase):
                         'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/62166.xml',
                         "AAS297")
 
-    section_dict["Lecture-Discussion"] = [section_a]
+    section_dict["Lecture"] = [section_a]
 
-    self.assertEqual(aas297.key_in_dict("Lecture-Discussion", section_dict), "Lecture-Discussion")
-    self.assertEqual(aas297.key_in_dict("Lecture", section_dict), "Lecture-Discussion")
-    self.assertEqual(aas297.key_in_dict("Discussion", section_dict), "Lecture-Discussion")
-    self.assertEqual(aas297.key_in_dict("Recitation", section_dict), "")
+    self.assertEqual(aas297.key_in_dict("Lecture-Discussion", section_dict), "Lecture")
+    self.assertEqual(aas297.key_in_dict("Lecture", section_dict), "Lecture")
+    self.assertEqual(aas297.key_in_dict("Discussion", section_dict), "")
+    self.assertEqual(aas297.key_in_dict("Lab", section_dict), "")
 
   def test_linked_sections_section_overlap(self):
     mus132 = Course("spring", "2022", "MUS132")
