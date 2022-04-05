@@ -134,7 +134,8 @@ class Course:
   #      linked([ADA, BL1]) --> False
   def linked(self, section_list):
     for i in section_list:
-      if i.get_name()[0] != section_list[0].get_name()[0]:
+      if (i.get_name()[0] != section_list[0].get_name()[0] or 
+          i.get_term() != section_list[0].get_term()):
         return False
     return True
 
