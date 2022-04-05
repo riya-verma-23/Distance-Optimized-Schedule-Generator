@@ -66,6 +66,30 @@ class TestWebScraping(unittest.TestCase):
     section_ls_1 = [math241_adb, math241_adb]
     self.assertFalse(aas297.has_time_conflict(section_ls_1))
   
+  def test_section_ls_time_confict_complex(self):
+
+    aas297 = Course("spring", "2022", "AAS297")
+
+    cs211_ea1 = Section('EA1',
+                'https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/CS/211/74483.xml',
+                'CS211')
+    cs374_adf = Section('ADF',
+                'https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/CS/374/66451.xml',
+                'CS374')
+    cs374_al1 = Section('AL1',
+                'https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/CS/374/66445.xml',
+                'CS374')
+    cs411_qg = Section('QG',
+                'https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/CS/411/40086.xml',
+                'CS411')
+    cs340_ics = Section('ICS',
+                'https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/CS/340/77096.xml',
+                'CS340')
+    
+    section_ls = [cs211_ea1, cs374_adf, cs374_al1, cs411_qg, cs340_ics]
+    
+    self.assertTrue(aas297.has_time_conflict(section_ls))
+  
   def test_split_sections(self):
     aas283 = Course("spring", "2022", "AAS283")
     sections_split = aas283.split_sections_on_type()
