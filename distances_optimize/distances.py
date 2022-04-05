@@ -17,6 +17,7 @@ Output: a distance optimized Schedule Object that contains the linked sections t
 class Distance:
 	#dictionary {key = (location str, location str), value = distance}
 	api_calls = dict()
+	count_api_calls = 0
 
 	#Demo Code from https://gist.github.com/olliefr/407c64413f61bd14e7af62fada6df866
 	#calls API and generates JSON file with distances between origins and destinations
@@ -75,7 +76,7 @@ class Distance:
 					else:
 						num = re.findall('\d*\.?\d+',dist_str)
 						num = float(num[0])
-					#order tuple (sections[i], sections[j]) alphabetically
+					# #order tuple (sections[i], sections[j]) alphabetically
 					if (sections[0].get_location() < sections[1].get_location()):
 						key = (sections[0].get_location(), sections[1].get_location())
 					else:
@@ -90,6 +91,26 @@ class Distance:
 		#for section in sections_two: locations.append(section.get_location() + " UIUC")
 		file = Distance.distance_matrix_file(sections_two[0].get_location() + " UIUC", sections_two[1].get_location() + " UIUC")
 		Distance.append_dict_from_JSON(file, sections_two)
+
+	#mimics append_to_dictionary
+	def count_api(sections_two):
+		file = 0
+		Distance.count_api_helper(file, sections_two)
+
+	#mimics append_dict_from_JSON and counts api calls instead of making them, appends to dictionary
+	def count_api_helper(r, sections):
+		Distance.count_api_calls += 1
+		num = 1.0
+		# #order tuple (sections[i], sections[j]) alphabetically
+		if (sections[0].get_location() < sections[1].get_location()):
+			key = (sections[0].get_location(), sections[1].get_location())
+		else:
+			key = (sections[1].get_location(), sections[0].get_location())
+		if key in Distance.api_calls: #finding the minimum distance between section A to section B and vice versa
+			if num < Distance.api_calls[key]:
+							Distance.api_calls[key] = num
+		else: Distance.api_calls[key] = num
+
 
 	#takes in a set of linked sections and calculates score for a schedule
 	def score(schedule):
@@ -129,7 +150,10 @@ class Distance:
 			for t in tuples:
 				section = [t[0], t[1]]
 				if (not(t[0].get_location(), t[1].get_location()) in Distance.api_calls) & (not(t[1].get_location(), t[0].get_location()) in Distance.api_calls):
-					Distance.append_to_dictionary(section)
+					#Distance.append_to_dictionary(section)
+					Distance.count_api(section)
+		else:
+			print("no sections to call")
 		
 		tuples = Distance.generate_tuple_sections(sectionsinDay)
 		perimeter = 0
