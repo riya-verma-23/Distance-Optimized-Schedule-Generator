@@ -6,14 +6,14 @@ import sys
 sys.path.insert(0, 'web_scraping')
 from course import Course
 
-# def test_calculatePerimeterPerDay():
-#     ans = 3.6
-#     #example thursday schedule
-#     cs225 = Course("spring", "2022", "CS225")
-#     scan252 = Course("spring", "2022", "SCAN252")
-#     stat410 = Course("spring", "2022", "STAT410")
-#     actual = distances.Distance.calculate_perimeter_per_day(sectionsinDay=[cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG")])
-#     np.testing.assert_array_equal(ans, actual)
+def test_calculatePerimeterPerDay():
+    ans = 3.6
+    #example thursday schedule
+    cs225 = Course("spring", "2022", "CS225")
+    scan252 = Course("spring", "2022", "SCAN252")
+    stat410 = Course("spring", "2022", "STAT410")
+    actual = distances.Distance.calculate_perimeter_per_day(sectionsinDay=[cs225.get_section("AYH"), scan252.get_section("C"), stat410.get_section("1UG")])
+    np.testing.assert_array_equal(ans, actual)
 
 # def test_eliminate_sections():
 #     math241 = Course("spring", "2022", "MATH241")
@@ -84,6 +84,7 @@ class TestGenerateSchedules(unittest.TestCase):
 if __name__ == "__main__":
     # test_generateScheduleCombinations()
     # test_generate_tuples()
-    # test_calculatePerimeterPerDay()
-    unittest.main()
+    test_calculatePerimeterPerDay()
+    print("test passed")
+    # unittest.main()
 

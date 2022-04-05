@@ -74,19 +74,19 @@ class Distance:
 					num = re.findall('\d*\.?\d+',dist_str)
 					#order tuple (sections[i], sections[j]) based on start time
 					if (sections[i].get_start() < sections[j].get_start()):
-						key = (sections[i], sections[j])
+						key = (sections[i].get_location(), sections[j].get_location())
 					else:
-						key = (sections[j], sections[i])
+						key = (sections[j].get_location(), sections[i].get_location())
 					if key in Distance.api_calls: #finding the minimum distance between section A to section B and vice versa
 						if float(num[0]) < Distance.api_calls[key]:
 							Distance.api_calls[key] = float(num[0])
 					else: Distance.api_calls[key] = float(num[0])
 					#print dictionary Distance.api_calls
 		for k, v in Distance.api_calls.items():
-			print(k[0].get_name(), k[1].get_name(), v)
+			print(k[0], k[1], v)
 
 	#wrapper function for distance_matrix_file and append_dict_from_JSON that calls API and appends to dictionary
-	def append_to_dict(sections):
+	def append_to_dictionary(sections):
 		locations = []
 		for section in sections: locations.append(section.get_location() + " UIUC")
 		file = Distance.distance_matrix_file(locations, locations)
@@ -123,11 +123,12 @@ class Distance:
 	def calculate_perimeter_per_day(sectionsinDay):
 		sections_to_call = Distance.eliminate_sections(sectionsinDay)
 		if (len(sections_to_call) != 0): 
-			Distance.append_to_dict(sections_to_call)
+			Distance.append_to_dictionary(sections_to_call)
 		tuples = Distance.generate_tuple_sections(sectionsinDay)
 		perimeter = 0
 		for t in tuples:
-			perimeter += Distance.api_calls[t]
+			t_loc = (t[0].get_location(), t[1].get_location())
+			perimeter += Distance.api_calls[t_loc]
 		return perimeter
 
 	#generates all valid schedule combinations without time conflicts by picking one linked section from each course
@@ -184,9 +185,9 @@ class Distance:
 	#scores all the schedules
 	#by calling score on each schedule which sums up the distances between sections on all days
 	#score() calls calculate_perimeter_per_day based on sections that occur on diff days
-	#calculate_perimter_per_day() calls eliminate_sections() and generate_tuple_sections() and append_to_dict()
+	#calculate_perimter_per_day() calls eliminate_sections() and generate_tuple_sections() and append_to_dictionary()
 	#to retrive data from previous api calls and make new api calls
-	#append_to_dict() calls distance_matrix_file() and append_dict_from_JSON() to retrive data from Distance Matrix API
+	#append_to_dictionary() calls distance_matrix_file() and append_dict_from_JSON() to retrive data from Distance Matrix API
 	def best_schedule(courses):
 		all_schedules = Distance.generate_schedule_combinations(courses)
 		Distance.score_all_schedules(all_schedules)
