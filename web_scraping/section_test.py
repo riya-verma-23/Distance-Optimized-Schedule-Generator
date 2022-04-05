@@ -2,6 +2,7 @@ from course import Course
 from section import Section
 import unittest
 
+# TODO: global variable of section: test practice
 class TestSection(unittest.TestCase):
   
   def test_section_init_and_accessors(self):
@@ -78,6 +79,14 @@ class TestSection(unittest.TestCase):
 
     # same section
     self.assertFalse(math241_ada.has_time_conflict(math241_ada))
+  
+  def test_days_overlap(self):
+
+    self.assertTrue(Section.days_overlap("MWF", "MWF"))
+
+    self.assertTrue(Section.days_overlap("MW", "WF"))
+
+    self.assertFalse(Section.days_overlap("MWF", "TR"))
   
   def test_hash(self):
     dictionary = {}
