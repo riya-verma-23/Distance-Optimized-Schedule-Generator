@@ -115,6 +115,27 @@ class TestWebScraping(unittest.TestCase):
     self.assertEqual(sections_split["Discussion/Recitation"][2], aas100_ad3)
     self.assertEqual(sections_split["Discussion/Recitation"][3], aas100_ad4)
   
+  def test_linked_term(self):
+
+    # this is the course used for comparison because (1) it has one section, which
+    # means it's fast to load and (2) that section has a name w/3 chars, which means
+    # linked() will check first char of each section)
+    cs222 = Course("fall", "2022", "SCAN251")
+    section_term_1 = Section('AD6',
+                        'https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/SCAN/251/71777.xml',
+                        "SCAN251") 
+    section_term_b = Section('F',
+                        'https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/SCAN/251/76474.xml',
+                        "SCAN251")
+    self.assertFalse(cs222.linked([section_term_1, section_term_b]))
+
+    # linked(same_section, same_section) will never happen irl because the section 
+    # combinations for each LinkedSection tested by linked() are the cartesian product
+    # of the section type lists
+    # this test just makes sure two linked sections with the same first char and term
+    # are considered linked
+    self.assertTrue(cs222.linked([section_term_1, section_term_1]))
+  
   def test_linked_sections_simple(self):
     aas297 = Course("spring", "2022", "AAS297")
 
