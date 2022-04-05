@@ -32,6 +32,7 @@ class Distance:
 		print(origins, destinations)
 		print(type(origins), type(destinations))
 		print(len(origins), len(destinations))
+
 		url = "https://maps.googleapis.com/maps/api/distancematrix/json?"
 		#reads in api key
 		api_key = ''
@@ -84,8 +85,8 @@ class Distance:
 					else:
 						num = re.findall('\d*\.?\d+',dist_str)
 						num = float(num[0])
-					#order tuple (sections[i], sections[j]) based on start time
-					if (sections[0].get_start() < sections[1].get_start()):
+					#order tuple (sections[i], sections[j]) alphabetically
+					if (sections[0].get_location() < sections[1].get_location()):
 						key = (sections[0].get_location(), sections[1].get_location())
 					else:
 						key = (sections[1].get_location(), sections[0].get_location())
@@ -138,14 +139,19 @@ class Distance:
 			tuples = Distance.generate_tuple_sections(sections_to_call)
 			for t in tuples:
 				section = [t[0], t[1]]
-				Distance.append_to_dictionary(section)
+				if (not(t[0].get_location(), t[1].get_location()) in Distance.api_calls) & (not(t[1].get_location(), t[0].get_location()) in Distance.api_calls):
+					Distance.append_to_dictionary(section)
 		
 		tuples = Distance.generate_tuple_sections(sectionsinDay)
 		perimeter = 0
 		for t in tuples:
 			print("tuples len: ", len(tuples))
-			t_loc = (t[0].get_location(), t[1].get_location())
-			perimeter += Distance.api_calls[t_loc]
+			t_loc_1 = (t[0].get_location(), t[1].get_location())
+			t_loc_2 = (t[1].get_location(), t[0].get_location())
+			if (t_loc_1 in Distance.api_calls):
+				perimeter += Distance.api_calls[t_loc_1]
+			elif (t_loc_2 in Distance.api_calls):
+				perimeter += Distance.api_calls[t_loc_2]
 		print('p: ', perimeter)
 		return perimeter
 
