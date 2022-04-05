@@ -20,7 +20,7 @@ Output: a distance optimized Schedule Object that contains the linked sections t
 
 
 class Distance:
-	#dictionary {key = (section index, section index), value = distance}
+	#dictionary {key = (location str, location str), value = distance}
 	api_calls = dict()
 
 	#Demo Code from https://gist.github.com/olliefr/407c64413f61bd14e7af62fada6df866
@@ -217,7 +217,7 @@ class Distance:
 	def best_schedule(courses):
 		all_schedules = Distance.generate_schedule_combinations(courses)
 		Distance.score_all_schedules(all_schedules)
-		min = 1000000000.0
+		min = float("inf")
 		best_schedule = []
 		scores = []
 		for schedule in all_schedules:
