@@ -14,11 +14,6 @@ Input: list of course objects the user is taking
 Output: a distance optimized Schedule Object that contains the linked sections to take for each course
 '''
 
-#to do - figure out why it is making unnecessary api calls
-#make only calls with origin - as first section and destination as other to remove the diagonal api elements
-
-
-
 class Distance:
 	#dictionary {key = (location str, location str), value = distance}
 	api_calls = dict()
@@ -129,7 +124,6 @@ class Distance:
 	def calculate_perimeter_per_day(sectionsinDay):
 		sections_to_call = Distance.eliminate_sections(sectionsinDay)
 		if (len(sections_to_call) != 0): 
-			print("sections_to_call: ", len(sections_to_call))
 			#for loop every 2 combination of sections_to_call - sections_to_call will be length 2
 			tuples = Distance.generate_tuple_sections(sections_to_call)
 			for t in tuples:
@@ -196,15 +190,7 @@ class Distance:
 	def score_all_schedules(all_schedules):
 		for schedule in all_schedules: 
 			schedule.set_score(Distance.score(schedule))
-			print("score:", Distance.score(schedule))
-			sch = []
-			for ls in schedule.get_linked_sections():
-				ll = []
-				for s in ls:
-					ll.append(s.get_name() + " " + s.get_course())
-				sch.append(ll)
-			print(sch)
-	
+
 	# user will input in the course names they are taking
 	# course name is used to create a list of course objects which is passed into best_schedule
 	# generates all valid schedules
@@ -214,6 +200,7 @@ class Distance:
 	# calculate_perimter_per_day() calls eliminate_sections() and generate_tuple_sections() and append_to_dictionary()
 	# to retrive data from previous api calls and make new api calls
 	# append_to_dictionary() calls distance_matrix_file() and append_dict_from_JSON() to retrive data from Distance Matrix API
+	# after all schedules are scored, a list of schedules with the minimum score are returned
 	def best_schedule(courses):
 		all_schedules = Distance.generate_schedule_combinations(courses)
 		Distance.score_all_schedules(all_schedules)
@@ -226,12 +213,9 @@ class Distance:
 			if val <= min:
 				min = val
 		#find all indices of the schedules with the min score
-		print(len(scores))
 		for i in range(len(scores)):
 			if scores[i] == min:
 				best_schedule.append(all_schedules[i])
-
-		print(type(best_schedule))
 		return best_schedule
 	
 	def print_time_conflicts(schedules):
