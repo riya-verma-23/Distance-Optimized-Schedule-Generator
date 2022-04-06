@@ -30,6 +30,7 @@ def generate_map_API(locations):
     return "https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers +"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA"
 
 # generates maps APIs for given schedule
+# returns list of API calls for each days schedule
 def map_API_schedule(schedule): 
     locations, result = [], []
     for day in schedule:
@@ -55,6 +56,7 @@ math241 = Course("spring", "2022", "MATH241")
 cs225 = Course("spring", "2022", "CS225")
 schedule =  Schedule(cs225.get_linked_sections())
 schedule_locations = schedule.return_locations()
+print(schedule_locations)
 # schedule = [['Electrical & Computer Eng Bldg'], [], ['Grainger', 'Siebel Center for Comp Sci'], ['Siebel Center for Comp Sci'], ['Siebel Center for Comp Sci', 'Grainger']]
 apis = map_API_schedule(schedule_locations)
 for day in apis:

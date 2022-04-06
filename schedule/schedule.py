@@ -86,7 +86,7 @@ class Schedule:
     def get_days_as_list(days):
         return [ day for day in days]
 
-    # returns whether there is a time conflict between any two sections in the list
+    # returns whether there is a time conflict between two schedules
     def has_time_conflict(self):
         for i in range(0, len(self.linked_sections)):
             for j in range(0, len(self.linked_sections)):
@@ -108,4 +108,6 @@ class Schedule:
 
 # cs225 = Course("spring", "2022", "CS225" )
 # schedule =  Schedule(cs225.get_linked_sections())
+# print(schedule.split_sections_on_day())
+# print(schedule.has_time_conflict())
 # print(schedule.return_locations())
