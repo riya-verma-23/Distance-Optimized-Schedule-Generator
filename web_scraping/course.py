@@ -32,7 +32,7 @@ class Course:
     "Discussion":{"Online Discussion", "Discussion", "Online Discussion"},
     "Lecture":{"Lecture-Discussion", "Lecture/Discussion", "Lecture", "Online Lecture-Discussion", 
               "Online Lecture",  "Online Lecture/Discussion"},
-    "Lab":{"Laboratory/Discussion", "Online Lab", "Laboratory", "Online Lab"},
+    "Lab":{"Laboratory-Discussion", "Laboratory/Discussion", "Online Lab", "Laboratory", "Online Lab"},
   }
 
   # Get course page using semester, year, and already init subject and number
@@ -40,7 +40,10 @@ class Course:
     path = ("https://courses.illinois.edu/cisapp/explorer/schedule/" + year +  "/" + 
     semester.lower() + "/" + self.subject + "/" + self.num + ".xml")
 
-    response = requests.get(path)
+    try:
+      response = requests.get(path)
+    except:
+      raise ValueError("timeout")
     self.page = response.text
     if not len(self.page):
       raise ValueError("no page found")
