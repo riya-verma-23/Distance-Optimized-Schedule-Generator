@@ -18,6 +18,7 @@ class TestSection(unittest.TestCase):
     self.assertEqual(section.get_days(), "TR")
     self.assertEqual(section.get_start().strftime("%H:%M"), "09:00")
     self.assertEqual(section.get_end().strftime("%H:%M"), "09:50")
+    self.assertEqual(section.get_term(), "1")
 
   def test_section_equals(self):
     section_a = Section('A',
