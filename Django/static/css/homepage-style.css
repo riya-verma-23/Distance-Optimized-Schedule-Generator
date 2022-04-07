@@ -65,6 +65,7 @@ html{
 .inputs button{
     margin-left: 45%;
     height: 25px;
+    margin-bottom: 20px;
     width: 100px;
     border: none;
     border-radius: 8px;

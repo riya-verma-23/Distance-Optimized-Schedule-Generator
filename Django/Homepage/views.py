@@ -28,6 +28,8 @@ maps_link = 'https://www.google.com/maps/embed/v1/directions?origin=place_id:ChI
 sections = ['AL2', 'AL3', 'DC2', 'CL8', 'M8']
 
 
+# Maps api requires locations list
+
 def homepage(request):
     classes = []
     if request.method == "POST":
@@ -49,3 +51,11 @@ def homepage(request):
         'sections': sections}
 
     return render(request, 'homepage.html', context)
+
+
+def reset_session(request):
+    try:
+        del request.session['classes']
+    except KeyError:
+        pass
+    return homepage(request)
