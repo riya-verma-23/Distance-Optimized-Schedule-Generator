@@ -99,7 +99,13 @@ class Section:
   # Get whether two sections have a time conflict
   # If one starts between the other's start and end times, there's a time conflict
   # A section cannot have a time conflict with itself
+  # An ASYNC section cannot have a time conflict with another section
+  # Assumes that course times from different semesters are never compared
   def has_time_conflict(self, other_section):
+
+    if(self.get_days() == 'ASYNC' or other_section.get_days == 'ASYNC'):
+      return False
+
     if (self != other_section and Section.days_overlap(self.get_days(), other_section.get_days())):
       
       if self.start >= other_section.start and self.start <= other_section.end:
