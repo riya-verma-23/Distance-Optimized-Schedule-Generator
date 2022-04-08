@@ -12,6 +12,12 @@ import unittest
 # how to improve in week 6 weekly meeting
 class TestWebScraping(unittest.TestCase):
   
+  def test_course_input_validation(self):
+    try:
+      Course("SpRiNg", "2022 ", "241 math  ")
+    except:
+      self.fail("Course math241 failed unexpectedly!")
+  
   def test_bad_course_input(self):
     self.assertRaises(ValueError, Course, "spring", "2022", "MATH10001")
     self.assertRaises(ValueError, Course, "spring", "3022", "MATH241")
@@ -23,6 +29,11 @@ class TestWebScraping(unittest.TestCase):
       Course("spring", "2022", "STAT400")
     except:
       self.fail("Course stat400 failed unexpectedly!")
+    
+    try:
+      Course("fall", "2022", "ME320")
+    except:
+      self.fail("Course me320 failed unexpectedly!")
     
   
   def test_bad_section_input(self):
@@ -160,6 +171,19 @@ class TestWebScraping(unittest.TestCase):
   def test_linked_sections_simple_2(self):
     aas310 = Course("fall", "2022", "AAS310")
     linked_section_ls = aas310.get_linked_sections()
+    self.assertNotEqual(len(linked_section_ls), 0)
+  
+  
+  def test_split_sections_1(self):
+    cs233 = Course("fall", "2022", "CS233")
+    sections_split = cs233.split_sections_on_type()
+    self.assertNotEqual(len(sections_split), 0)
+    for section in sections_split:
+      self.assertNotEqual(len(sections_split[section]), 0)
+  
+  def test_linked_sections_simple_3(self):
+    cs233 = Course("fall", "2022", "CS233")
+    linked_section_ls = cs233.get_linked_sections()
     self.assertNotEqual(len(linked_section_ls), 0)
 
   def test_linked_sections_complex(self):
