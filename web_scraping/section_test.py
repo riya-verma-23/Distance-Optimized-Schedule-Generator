@@ -90,6 +90,11 @@ class TestSection(unittest.TestCase):
                   'MATH241')
     self.assertFalse(math241_ada.has_time_conflict(stat200_onl))
 
+    stat599_ = Section('',
+                  'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/STAT/599/10203.xml',
+                  'STAT599')
+    self.assertFalse(stat599_.has_time_conflict(stat200_onl))
+
   def test_days_overlap(self):
 
     self.assertTrue(Section.days_overlap("MWF", "MWF"))
