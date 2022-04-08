@@ -7,4 +7,5 @@ from django.conf import settings
 urlpatterns = [
     path('', views.homepage),
     path('clear', views.reset_session, name="clear"),
+    path('generate', views.generate_schedule, name="generate"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

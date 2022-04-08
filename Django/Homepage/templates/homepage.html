@@ -63,6 +63,10 @@
                 {% endif %}
                 <button type="submit">Submit</button>
                 <button type="reset"><a href="{% url 'clear' %}" class="btn btn-primary">Reset</a></button>
+                {% if classes %}
+                <button type="menu"><a href="{% url 'generate' %}" class="btn btn-primary">Generate
+                        Schedule</a></button>
+                {% endif %}
 
             </form>
         </div>

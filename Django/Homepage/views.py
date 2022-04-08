@@ -1,4 +1,12 @@
+import os
+import sys
+
 from django.shortcuts import render
+
+sys.path.append(os.path.join(os.path.dirname(
+    sys.path[0]), 'web_scraping'))
+from course import Course
+
 # Create your views here.
 
 # frontend_components is a dictionary of parameters that have to be
@@ -80,7 +88,10 @@ def reset_session(request):
     return homepage(request)
 
 
-# def generate_schedule(request):
-#     if 'classes' in request.session:
+def generate_schedule(request):
+    if 'classes' in request.session:
+        courses=[]
+        for course in request.session['classes']:
+            courses.append(Course(request.session['semester'], request.session['year'], course))
 
-#     return homepage(request)
+    return homepage(request)
