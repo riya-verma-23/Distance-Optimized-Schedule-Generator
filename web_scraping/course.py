@@ -36,9 +36,9 @@ class Course:
   }
 
   # Get course page using semester, year, and already init subject and number
-  def get_page(self, semester, year):
-    path = ("https://courses.illinois.edu/cisapp/explorer/schedule/" + year +  "/" + 
-    semester.lower() + "/" + self.subject + "/" + self.num + ".xml")
+  def get_page(self):
+    path = ("https://courses.illinois.edu/cisapp/explorer/schedule/" + self.year +  "/" + 
+    self.semester + "/" + self.subject + "/" + self.num + ".xml")
 
     try:
       response = requests.get(path)
@@ -63,11 +63,11 @@ class Course:
   # Initialize Course object given the semester, year, and course number
   def __init__(self, semester, year, course_num):
     try:
-      self.subject = re.findall('\D+', course_num)[0]
-      self.num = re.findall('\d+', course_num)[0]
-      self.semester = semester
-      self.year = year
-      self.get_page(semester, year)
+      self.subject = re.findall(r'[^\W\d_]+', course_num)[0].upper()
+      self.num = re.findall('\d+', course_num)[0].strip()
+      self.semester = semester.strip().lower()
+      self.year = year.strip()
+      self.get_page()
       self.init_sections()
     # if user forgot subject, number, or class unavailable in given semester, throw exception
     except:
