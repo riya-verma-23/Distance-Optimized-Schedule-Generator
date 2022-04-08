@@ -29,6 +29,7 @@ sections = ['AL2', 'AL3', 'DC2', 'CL8', 'M8']
 
 
 # Maps api requires locations list
+# Course.py no input validation needed
 
 def homepage(request):
     classes = []
@@ -56,6 +57,14 @@ def homepage(request):
 def reset_session(request):
     try:
         del request.session['classes']
+        del request.session['sections']
+        del request.session['maps_link']
     except KeyError:
         pass
     return homepage(request)
+
+
+# def generate_schedule(request):
+#     if 'classes' in request.session:
+
+#     return homepage(request)
