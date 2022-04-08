@@ -28,6 +28,20 @@
         <div class="max-width">
             <form action="." method="POST">
                 {% csrf_token %}
+                {% if semester is None %}
+                <div class="field">
+                    <div class="text-box">
+                        <label for="Semester">Semester:</label>
+                        <input type="text" name="sem" id="sem" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="text-box">
+                        <label for="Year">Year:</label>
+                        <input type="text" name="year" id="year" required>
+                    </div>
+                </div>
+                {% else %}
                 <div class="field">
                     <div class="text-box">
                         <label for="Subject">Subject:</label>
@@ -46,8 +60,10 @@
                         <input type="text" name="instructor" id="instructor">
                     </div>
                 </div> -->
+                {% endif %}
                 <button type="submit">Submit</button>
                 <button type="reset"><a href="{% url 'clear' %}" class="btn btn-primary">Reset</a></button>
+
             </form>
         </div>
     </section>

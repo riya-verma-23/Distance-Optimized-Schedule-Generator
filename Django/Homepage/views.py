@@ -32,22 +32,36 @@ sections = ['AL2', 'AL3', 'DC2', 'CL8', 'M8']
 # Course.py no input validation needed
 
 def homepage(request):
+    semester = None
+    year = None
     classes = []
     if request.method == "POST":
         # print(request.POST)  # Printing out the user input from the Front End
-        course_no = request.POST['sub']+' '+request.POST['course_no']
-        if 'classes' in request.session:
-            if course_no not in request.session['classes']:
-                request.session['classes'].insert(0, course_no)
+        if 'sem' in request.POST:
+            request.session['semester'] = request.POST['sem']
+            request.session['year'] = request.POST['year']
+
+        if 'sub' in request.POST:
+            course_no = request.POST['sub']+request.POST['course_no']
+            if 'classes' in request.session:
+                if course_no not in request.session['classes']:
+                    request.session['classes'].insert(0, course_no)
+                    request.session.modified = True
+            else:
+                request.session['classes'] = [course_no]
                 request.session.modified = True
-        else:
-            request.session['classes'] = [course_no]
-            request.session.modified = True
 
     if 'classes' in request.session:
         classes = request.session['classes']
 
+    if 'semester' in request.session:
+        semester = request.session['semester']
+
+    if 'year' in request.session:
+        year = request.session['year']
+
     context = {
+        'semester': semester, 'year': year,
         'maps_link': maps_link, 'classes': classes,
         'sections': sections}
 
@@ -57,6 +71,8 @@ def homepage(request):
 def reset_session(request):
     try:
         del request.session['classes']
+        del request.session['semester']
+        del request.session['year']
         del request.session['sections']
         del request.session['maps_link']
     except KeyError:
