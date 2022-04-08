@@ -170,6 +170,13 @@ class Course:
           or not (self.check_linked)):
         linked_sections.append(self.LinkedSection(combo))
     
+    # if len linked_sections is 0 just return the cartesian product
+    # TODO: optimize
+    if not len(linked_sections):
+      combos = it.product(*(sections_by_type[section_name] for section_name in sorted_sections))
+      for combo in combos:
+        linked_sections.append(self.LinkedSection(combo))
+
     return linked_sections
     
   class LinkedSection:
