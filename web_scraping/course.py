@@ -55,9 +55,9 @@ class Course:
     self.sections = {}
     for section in soup.findAll("section"):
       section_str = section.string.strip()
+      self.sections[section_str] = Section(section_str, section.get('href'), self.subject + self.num)
       if len(section_str) < 3:
         self.check_linked = False
-      self.sections[section_str] = Section(section_str, section.get('href'), self.subject + self.num)
 
 
   # Initialize Course object given the semester, year, and course number
@@ -142,6 +142,17 @@ class Course:
         return False
     return True
 
+  # Do not link courses that have incompatible section types
+  # i.e. Laboratory-Discussion and Lecture-Discussion
+  def relink(self, section_ls):
+    has_lab_disc = False
+    has_lecture_disc = False
+    for section in section_ls:
+      if section.get_type() in ["Lecture-Discussion", "Lecture/Discussion", "Online Lecture-Discussion", 
+                                "Online Lecture/Discussion"]:
+        return [section]
+    return section_ls
+
   # gets list of all possible groups of linked sections 
   # (just the required e.g. lab, discussion, lecture) 
   # ex. {...{section discussion, section lecture, section lab}...}
@@ -175,7 +186,9 @@ class Course:
     if not len(linked_sections):
       combos = it.product(*(sections_by_type[section_name] for section_name in sorted_sections))
       for combo in combos:
-        linked_sections.append(self.LinkedSection(combo))
+        if not self.has_time_conflict(combo):
+          new_combo = self.relink(combo)
+          linked_sections.append(self.LinkedSection(new_combo))
 
     return linked_sections
     
