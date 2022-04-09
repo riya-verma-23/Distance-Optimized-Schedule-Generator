@@ -81,6 +81,20 @@ class TestSection(unittest.TestCase):
     # same section
     self.assertFalse(math241_ada.has_time_conflict(math241_ada))
   
+  def test_section_time_conflict_async(self):
+    stat200_onl = Section('ONL',
+                "https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/STAT/200/68770.xml",
+                'STAT200')
+    math241_ada = Section('ADA',
+                  'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/46053.xml',
+                  'MATH241')
+    self.assertFalse(math241_ada.has_time_conflict(stat200_onl))
+
+    stat599_ = Section('',
+                  'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/STAT/599/10203.xml',
+                  'STAT599')
+    self.assertFalse(stat599_.has_time_conflict(stat200_onl))
+
   def test_days_overlap(self):
 
     self.assertTrue(Section.days_overlap("MWF", "MWF"))

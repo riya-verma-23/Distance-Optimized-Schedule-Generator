@@ -32,15 +32,18 @@ class Course:
     "Discussion":{"Online Discussion", "Discussion", "Online Discussion"},
     "Lecture":{"Lecture-Discussion", "Lecture/Discussion", "Lecture", "Online Lecture-Discussion", 
               "Online Lecture",  "Online Lecture/Discussion"},
-    "Lab":{"Laboratory/Discussion", "Online Lab", "Laboratory", "Online Lab"},
+    "Lab":{"Laboratory-Discussion", "Laboratory/Discussion", "Online Lab", "Laboratory", "Online Lab"},
   }
 
   # Get course page using semester, year, and already init subject and number
-  def get_page(self, semester, year):
-    path = ("https://courses.illinois.edu/cisapp/explorer/schedule/" + year +  "/" + 
-    semester.lower() + "/" + self.subject + "/" + self.num + ".xml")
+  def get_page(self):
+    path = ("https://courses.illinois.edu/cisapp/explorer/schedule/" + self.year +  "/" + 
+    self.semester + "/" + self.subject + "/" + self.num + ".xml")
 
-    response = requests.get(path)
+    try:
+      response = requests.get(path)
+    except:
+      raise ValueError("timeout")
     self.page = response.text
     if not len(self.page):
       raise ValueError("no page found")
@@ -52,19 +55,19 @@ class Course:
     self.sections = {}
     for section in soup.findAll("section"):
       section_str = section.string.strip()
+      self.sections[section_str] = Section(section_str, section.get('href'), self.subject + self.num)
       if len(section_str) < 3:
         self.check_linked = False
-      self.sections[section_str] = Section(section_str, section.get('href'), self.subject + self.num)
 
 
   # Initialize Course object given the semester, year, and course number
   def __init__(self, semester, year, course_num):
     try:
-      self.subject = re.findall('\D+', course_num)[0]
-      self.num = re.findall('\d+', course_num)[0]
-      self.semester = semester
-      self.year = year
-      self.get_page(semester, year)
+      self.subject = re.findall(r'[^\W\d_]+', course_num)[0].upper()
+      self.num = re.findall('\d+', course_num)[0].strip()
+      self.semester = semester.strip().lower()
+      self.year = year.strip()
+      self.get_page()
       self.init_sections()
     # if user forgot subject, number, or class unavailable in given semester, throw exception
     except:
@@ -139,6 +142,17 @@ class Course:
         return False
     return True
 
+  # Do not link courses that have incompatible section types
+  # i.e. Laboratory-Discussion and Lecture-Discussion
+  def relink(self, section_ls):
+    has_lab_disc = False
+    has_lecture_disc = False
+    for section in section_ls:
+      if section.get_type() in ["Lecture-Discussion", "Lecture/Discussion", "Online Lecture-Discussion", 
+                                "Online Lecture/Discussion"]:
+        return [section]
+    return section_ls
+
   # gets list of all possible groups of linked sections 
   # (just the required e.g. lab, discussion, lecture) 
   # ex. {...{section discussion, section lecture, section lab}...}
@@ -167,6 +181,15 @@ class Course:
           or not (self.check_linked)):
         linked_sections.append(self.LinkedSection(combo))
     
+    # if len linked_sections is 0 just return the cartesian product
+    # TODO: optimize
+    if not len(linked_sections):
+      combos = it.product(*(sections_by_type[section_name] for section_name in sorted_sections))
+      for combo in combos:
+        if not self.has_time_conflict(combo):
+          new_combo = self.relink(combo)
+          linked_sections.append(self.LinkedSection(new_combo))
+
     return linked_sections
     
   class LinkedSection:
