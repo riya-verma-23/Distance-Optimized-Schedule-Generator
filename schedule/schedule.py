@@ -1,9 +1,8 @@
 import sys
 sys.path.insert(0, "web_scraping")
-
 from course import Course
 from section import Section
-# class maintaining the Schedule 
+
 class Schedule:
     '''
     Creates a Schedule object
@@ -14,7 +13,7 @@ class Schedule:
     schedule: outputted class schedule to take
     '''
 
-# Initialize Schedule object given the score and linked_sections
+    # Initialize Schedule object given the score and linked_sections
     def __init__(self, linked_sections):
         self.score = -9
         self.linked_sections = linked_sections
@@ -41,13 +40,11 @@ class Schedule:
         self.linked_sections = course.get_linked_sections()
 
     # returns a 2d list for daily schedule (which sections on each day)
-    # each day's list consists of sections on that day 
+    # each day's list consists of section objects on that day 
     # the sections are sorted ascendingly using start_time
     def split_sections_on_day(self):
         schedule_result = [[], [], [], [], []]
         result = []
-        # for course in courses:
-        #     for section in linked_section:
         for linked_section in self.linked_sections:
             for section in linked_section:
                 if "M" in section.get_days():
@@ -74,7 +71,39 @@ class Schedule:
         
         return result
 
-    # returns the days that need to be calculated
+    # returns a 2d list for daily schedule (which sections on each day)
+    # each day's list consists of sections names on that day 
+    # the sections are sorted ascendingly using start_time
+    def split_sections_on_day_str(self):
+        schedule_result = [[], [], [], [], []]
+        result = []
+        for linked_section in self.linked_sections:
+            for section in linked_section:
+                if "M" in section.get_days():
+                    schedule_result[0].append(tuple((section.get_name(), section.get_start())))
+                if "T" in section.get_days():
+                    schedule_result[1].append(tuple((section.get_name(), section.get_start())))
+                if "W" in section.get_days():
+                    schedule_result[2].append(tuple((section.get_name(), section.get_start())))
+                if "R" in section.get_days():
+                    schedule_result[3].append(tuple((section.get_name(), section.get_start())))
+                if "F" in section.get_days():
+                    schedule_result[4].append(tuple((section.get_name(), section.get_start())))
+
+        for day in schedule_result:
+            day.sort(key=lambda a: a[1])
+        
+        for day in schedule_result:
+            only_sections = [ section[0] for section in day ]
+            remove_duplicates = []
+            for section in only_sections:
+                if section not in remove_duplicates:
+                    remove_duplicates.append(section)
+            result.append(remove_duplicates)
+        
+        return result
+
+    # returns the days whose distances need to be calculated
     # removes all the day where there are repeats in the schedule
     def unique_days(self):
         unique_schedule = []
@@ -92,7 +121,7 @@ class Schedule:
             for j in range(0, len(self.linked_sections)):
                 if (self.linked_sections[i].has_time_conflict(self.linked_sections[j])):
                     return True
-        return False    
+        return False
 
     # returns locations of all classes in the schedule
     def return_locations(self):
@@ -106,8 +135,11 @@ class Schedule:
             result.append(locations)
         return result
 
-# cs225 = Course("spring", "2022", "CS225" )
-# schedule =  Schedule(cs225.get_linked_sections())
-# print(schedule.split_sections_on_day())
+cs225 = Course("spring", "2022", "CS225" )
+# cs233 = Course("spring", "2022", "CS233")
+aas283 = Course("spring", "2022", "AAS283" )
+stat200 = Course("spring", "2021", "STAT200" )
+schedule =  Schedule(cs225.get_linked_sections())
+# print(schedule.has_time_conflict())
 # print(schedule.has_time_conflict())
 # print(schedule.return_locations())
