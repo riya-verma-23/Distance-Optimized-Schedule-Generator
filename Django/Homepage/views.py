@@ -5,7 +5,15 @@ from django.shortcuts import render
 
 sys.path.append(os.path.join(os.path.dirname(
     sys.path[0]), 'web_scraping'))
+sys.path.append(os.path.join(os.path.dirname(
+    sys.path[0]), 'schedule'))
+sys.path.append(os.path.join(os.path.dirname(
+    sys.path[0]), 'distances_optimize'))
+
+from section import Section
 from course import Course
+from schedule import Schedule
+from distances import Distance
 
 # Create your views here.
 
@@ -32,9 +40,6 @@ from course import Course
 #     'section_5_2': 'P0',
 # }
 
-maps_link = 'https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJf5sYMRrXDIgRv9cFI6s4og8&destination=place_id:ChIJqXmEqmvXDIgRMJY1DdQBn04&key=AIzaSyC5EWe12L9MWFK0Um6aRdVkZd6eMETlNnY'
-sections = ['AL2', 'AL3', 'DC2', 'CL8', 'M8']
-
 
 # Maps api requires locations list
 # Course.py no input validation needed
@@ -43,6 +48,9 @@ def homepage(request):
     semester = None
     year = None
     classes = []
+    maps_link = 'https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJf5sYMRrXDIgRv9cFI6s4og8&destination=place_id:ChIJqXmEqmvXDIgRMJY1DdQBn04&key=AIzaSyC5EWe12L9MWFK0Um6aRdVkZd6eMETlNnY'
+    sections = []
+
     if request.method == "POST":
         # print(request.POST)  # Printing out the user input from the Front End
         if 'sem' in request.POST:
@@ -67,6 +75,12 @@ def homepage(request):
 
     if 'year' in request.session:
         year = request.session['year']
+    
+    if 'sections' in request.session:
+        sections = request.session['sections']
+    
+    if 'maps_link' in request.session:
+        maps_link = request.session['maps_link']
 
     context = {
         'semester': semester, 'year': year,
@@ -90,8 +104,18 @@ def reset_session(request):
 
 def generate_schedule(request):
     if 'classes' in request.session:
-        courses=[]
+        course_list=[]
         for course in request.session['classes']:
-            courses.append(Course(request.session['semester'], request.session['year'], course))
+            course_list.append(Course(request.session['semester'], request.session['year'], course))
 
+        schedules=Distance.best_schedule(course_list) #Bug with CS 440, Math 416 + Input Validation (Fall 2021?)
+                                                      #Index out of bounds at line 188 or sections not found(ln 145)
+        best_schedule=schedules[0]
+        section_list=[]
+        location_list=[]
+        for course in best_schedule.get_linked_sections():
+            #print(course[0].get_course()+" "+course[0].get_name()+" "+course[0].get_location())
+            section_list.append(course[0].get_name())
+        
+        request.session['sections']=section_list
     return homepage(request)
