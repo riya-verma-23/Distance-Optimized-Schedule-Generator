@@ -3,7 +3,9 @@ import numpy as np
 import distances
 from distances import *
 import sys
-sys.path.insert(0, 'web_scraping')
+import os
+sys.path.append(os.path.join(os.path.dirname(
+    sys.path[0]), 'web_scraping'))
 from course import Course
 
 # def test_eliminate_sections():

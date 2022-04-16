@@ -4,8 +4,11 @@ from array import *
 import itertools as it
 import re
 import sys
-sys.path.insert(0, 'web_scraping')
-sys.path.insert(1, 'schedule')
+import os
+sys.path.append(os.path.join(os.path.dirname(
+    sys.path[0]), 'web_scraping'))
+sys.path.append(os.path.join(os.path.dirname(
+    sys.path[0]), 'schedule'))
 from schedule import Schedule
 
 '''
@@ -29,7 +32,7 @@ class Distance:
 		#reads in api key
 		api_key = ''
 		try:
-			with open('distances_optimize/api_key', 'r') as f:
+			with open('/Users/nalintiwary/Documents/CS 222 Project/course-project-tyk-b/distances_optimize/api_key.txt', 'r') as f:
 				api_key = f.read().strip()
 		except FileNotFoundError:
 			print("'%s' file not found" % 'api_key')
@@ -150,10 +153,8 @@ class Distance:
 			for t in tuples:
 				section = [t[0], t[1]]
 				if (not(t[0].get_location(), t[1].get_location()) in Distance.api_calls) & (not(t[1].get_location(), t[0].get_location()) in Distance.api_calls):
-					#Distance.append_to_dictionary(section)
-					Distance.count_api(section)
-		else:
-			print("no sections to call")
+					Distance.append_to_dictionary(section)
+					#Distance.count_api(section)
 		
 		tuples = Distance.generate_tuple_sections(sectionsinDay)
 		perimeter = 0
@@ -172,6 +173,12 @@ class Distance:
 
 		ll = []
 		for course in courses:
+			print(course)
+			#print sections in linked sections
+			for ls in course.get_linked_sections():
+				print("ls")
+				for section in ls:
+					print(section.get_name())
 			ll.append(course.get_linked_sections())
 	
 		all_schedule = [] #each schedule will be a set of linked sections, all schedules is all possible sets
@@ -180,12 +187,13 @@ class Distance:
 		#initialize indexes to first combination (0, 0, 0)
 		for i in range(n):
 			indexes.append(0)
-
+		
 		while (1):
 			schedule = [] 
 			#Append the courses given the index combination to generate a schedule
 			for i in range(n):
 				schedule.append(ll[i][indexes[i]])
+				print("index", i)
 			
 			s = Schedule(schedule)
 			if (not(s.has_time_conflict())):
@@ -261,7 +269,7 @@ class Distance:
 		ll = []
 		for course in courses:
 			ll.append(course.get_linked_sections())
-	
+		
 		indexes = []
 
 		#initialize indexes to first combination (0, 0, 0)

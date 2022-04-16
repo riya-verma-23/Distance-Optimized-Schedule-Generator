@@ -2,6 +2,7 @@ import os
 import sys
 
 from django.shortcuts import render
+from numpy import size
 
 sys.path.append(os.path.join(os.path.dirname(
     sys.path[0]), 'web_scraping'))
@@ -107,6 +108,7 @@ def generate_schedule(request):
         course_list=[]
         for course in request.session['classes']:
             course_list.append(Course(request.session['semester'], request.session['year'], course))
+            #print(course_list[size(course_list)-1])
 
         schedules=Distance.best_schedule(course_list) #Bug with CS 440, Math 416 + Input Validation (Fall 2021?)
                                                       #Index out of bounds at line 188 or sections not found(ln 145)
@@ -117,5 +119,11 @@ def generate_schedule(request):
             #print(course[0].get_course()+" "+course[0].get_name()+" "+course[0].get_location())
             section_list.append(course[0].get_name())
         
+        for course in best_schedule.get_linked_sections():
+            #print(course[0].get_course()+" "+course[0].get_name()+" "+course[0].get_location())
+            location_list.append(course[0].get_location())
+            print(course[0].get_location())
+        
         request.session['sections']=section_list
+        
     return homepage(request)

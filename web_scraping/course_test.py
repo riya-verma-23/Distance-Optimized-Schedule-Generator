@@ -12,6 +12,12 @@ import unittest
 # how to improve in week 6 weekly meeting
 class TestWebScraping(unittest.TestCase):
   
+  def test_course_input_validation(self):
+    try:
+      Course("SpRiNg", "2022 ", "241 math  ")
+    except:
+      self.fail("Course math241 failed unexpectedly!")
+  
   def test_bad_course_input(self):
     self.assertRaises(ValueError, Course, "spring", "2022", "MATH10001")
     self.assertRaises(ValueError, Course, "spring", "3022", "MATH241")
@@ -23,6 +29,11 @@ class TestWebScraping(unittest.TestCase):
       Course("spring", "2022", "STAT400")
     except:
       self.fail("Course stat400 failed unexpectedly!")
+    
+    try:
+      Course("fall", "2022", "ME320")
+    except:
+      self.fail("Course me320 failed unexpectedly!")
     
   
   def test_bad_section_input(self):
@@ -66,7 +77,7 @@ class TestWebScraping(unittest.TestCase):
     section_ls_1 = [math241_adb, math241_adb]
     self.assertFalse(aas297.has_time_conflict(section_ls_1))
   
-  def test_section_ls_time_confict_complex(self):
+  def test_section_ls_time_conflict_complex(self):
 
     aas297 = Course("spring", "2022", "AAS297")
 
@@ -115,6 +126,27 @@ class TestWebScraping(unittest.TestCase):
     self.assertEqual(sections_split["Discussion/Recitation"][2], aas100_ad3)
     self.assertEqual(sections_split["Discussion/Recitation"][3], aas100_ad4)
   
+  def test_linked_term(self):
+
+    # this is the course used for comparison because (1) it has one section, which
+    # means it's fast to load and (2) that section has a name w/3 chars, which means
+    # linked() will check first char of each section)
+    cs222 = Course("fall", "2022", "SCAN251")
+    section_term_1 = Section('AD6',
+                        'https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/SCAN/251/71777.xml',
+                        "SCAN251") 
+    section_term_b = Section('F',
+                        'https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/SCAN/251/76474.xml',
+                        "SCAN251")
+    self.assertFalse(cs222.linked([section_term_1, section_term_b]))
+
+    # linked(same_section, same_section) will never happen irl because the section 
+    # combinations for each LinkedSection tested by linked() are the cartesian product
+    # of the section type lists
+    # this test just makes sure two linked sections with the same first char and term
+    # are considered linked
+    self.assertTrue(cs222.linked([section_term_1, section_term_1]))
+  
   def test_linked_sections_simple(self):
     aas297 = Course("spring", "2022", "AAS297")
 
@@ -131,6 +163,28 @@ class TestWebScraping(unittest.TestCase):
     self.assertEqual(ans[0], linked_section_ls[0])
     self.assertEqual(ans[1], linked_section_ls[1])
   
+  def test_linked_sections_simple_1(self):
+    scan251 = Course("fall", "2022", "SCAN251")
+    linked_section_ls = scan251.get_linked_sections()
+    self.assertEqual(len(linked_section_ls[0]), 2)
+  
+  def test_linked_sections_simple_2(self):
+    aas310 = Course("fall", "2022", "AAS310")
+    linked_section_ls = aas310.get_linked_sections()
+    self.assertNotEqual(len(linked_section_ls), 0)
+  
+  
+  def test_split_sections_1(self):
+    cs233 = Course("fall", "2022", "CS233")
+    sections_split = cs233.split_sections_on_type()
+    self.assertNotEqual(len(sections_split), 0)
+    for section in sections_split:
+      self.assertNotEqual(len(sections_split[section]), 0)
+  
+  def test_linked_sections_simple_3(self):
+    cs233 = Course("fall", "2022", "CS233")
+    linked_section_ls = cs233.get_linked_sections()
+    self.assertNotEqual(len(linked_section_ls), 0)
 
   def test_linked_sections_complex(self):
     math241 = Course("spring", "2022", "MATH241")
@@ -165,12 +219,12 @@ class TestWebScraping(unittest.TestCase):
                         'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/297/62166.xml',
                         "AAS297")
 
-    section_dict["Lecture-Discussion"] = [section_a]
+    section_dict["Lecture"] = [section_a]
 
-    self.assertEqual(aas297.key_in_dict("Lecture-Discussion", section_dict), "Lecture-Discussion")
-    self.assertEqual(aas297.key_in_dict("Lecture", section_dict), "Lecture-Discussion")
-    self.assertEqual(aas297.key_in_dict("Discussion", section_dict), "Lecture-Discussion")
-    self.assertEqual(aas297.key_in_dict("Recitation", section_dict), "")
+    self.assertEqual(aas297.key_in_dict("Lecture-Discussion", section_dict), "Lecture")
+    self.assertEqual(aas297.key_in_dict("Lecture", section_dict), "Lecture")
+    self.assertEqual(aas297.key_in_dict("Discussion", section_dict), "")
+    self.assertEqual(aas297.key_in_dict("Lab", section_dict), "")
 
   def test_linked_sections_section_overlap(self):
     mus132 = Course("spring", "2022", "MUS132")

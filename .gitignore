@@ -1,2 +1,4 @@
 Django/TestApp/**
 .DS_Store
+*.txt
+*.json

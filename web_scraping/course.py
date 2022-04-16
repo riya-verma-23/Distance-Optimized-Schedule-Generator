@@ -15,39 +15,59 @@ class Course:
   num: i.e. 241
   semester: i.e. spring
   year: i.e. 2022
+  check_linked: whether if two sections are linked should be checked before
+                creating linkedsections (not necessary for classes where
+                Section names < 3 chars)
+
   Static variables:
   strainer: SoupStrainer("section") is an object that restricts how much of a page is
             parsed into a BeautifulSoup object, which can make parsing faster
+  section_types: dictionary that determines whether two section types are equivalent
+                (don't need to be taken together)
+                src: https://registrar.illinois.edu/wp-content/uploads/2021/02/Schedule-Type-Descriptions.pdf
   '''
   strainer = SoupStrainer("section")
-  
-  # Get course page using semester, year, and already init subject and number
-  def get_page(self, semester, year):
-    path = ("https://courses.illinois.edu/cisapp/explorer/schedule/" + year +  "/" + 
-    semester.lower() + "/" + self.subject + "/" + self.num + ".xml")
 
-    response = requests.get(path)
+  section_types = {
+    "Discussion":{"Online Discussion", "Discussion", "Online Discussion"},
+    "Lecture":{"Lecture-Discussion", "Lecture/Discussion", "Lecture", "Online Lecture-Discussion", 
+              "Online Lecture",  "Online Lecture/Discussion"},
+    "Lab":{"Laboratory-Discussion", "Laboratory/Discussion", "Online Lab", "Laboratory", "Online Lab"},
+  }
+
+  # Get course page using semester, year, and already init subject and number
+  def get_page(self):
+    path = ("https://courses.illinois.edu/cisapp/explorer/schedule/" + self.year +  "/" + 
+    self.semester + "/" + self.subject + "/" + self.num + ".xml")
+
+    try:
+      response = requests.get(path)
+    except:
+      raise ValueError("timeout")
     self.page = response.text
     if not len(self.page):
       raise ValueError("no page found")
   
   # Init the sections dictionary using each course's XML file
   def init_sections(self):
+    self.check_linked = True
     soup = BeautifulSoup(self.page, "lxml-xml", parse_only=Course.strainer)
     self.sections = {}
     for section in soup.findAll("section"):
       section_str = section.string.strip()
       self.sections[section_str] = Section(section_str, section.get('href'), self.subject + self.num)
+      if len(section_str) < 3:
+        self.check_linked = False
 
 
   # Initialize Course object given the semester, year, and course number
   def __init__(self, semester, year, course_num):
     try:
-      self.subject = re.findall('\D+', course_num)[0]
-      self.num = re.findall('\d+', course_num)[0]
-      self.semester = semester
-      self.year = year
-      self.get_page(semester, year)
+      self.subject = re.findall(r'[^\W\d_]+', course_num)[0].upper()
+      self.num = re.findall('\d+', course_num)[0].strip()
+      self.semester = semester.strip().lower()
+      self.year = year.strip()
+      self.get_page()
       self.init_sections()
     # if user forgot subject, number, or class unavailable in given semester, throw exception
     except:
@@ -58,26 +78,27 @@ class Course:
     return (self.subject == other.get_subject() and self.num == other.get_number() and
      self.semester == other.get_semester() and self.year == other.get_year())
 
+  # Get the section category this section longs to
+  def get_section_category(self, section_type):
+    if "Lecture" in section_type and section_type in Course.section_types["Lecture"]:
+      return "Lecture"
+    if "Discussion" in section_type and section_type in Course.section_types["Discussion"]:
+      return "Discussion"
+    if "Lab" in section_type and section_type in Course.section_types["Lab"]:
+      return "Lab"
+    return section_type
+
   # Determines if the current section type is in the dictionary
   # if it is, return the section name corresponding to this type
   # otherwise, return empty string
   # Example: MUS132 has types Online Discussion and Discussion/Recitation
-  # The key_in_dict('Online Discussion', sections_by_type) -> 'Discussion/Recitation'
-  # key_in_dict('Lecture', sections_by_type) -> ''
+  # After discussion/recitation added: key_in_dict('Online Discussion', sections_by_type) -> 'Discussion'
+  # Before lecture added: key_in_dict('Lecture', sections_by_type) -> ''
   def key_in_dict(self, section_type, sections_by_type):
-    # Get list of words in section_type
-    words_in_section = re.findall(r'\b\w+\b', section_type)
-
-    # If any of the words in this section's name are in another section name,
-    # they are the same section type
-    # TODO: is this true? is there ever 'Discussion/Recitation' and 'Laboratory/Discussion'?
-    # if so should this be hardcoded to handle a set of section types that courses are
-    # restricted to?
-    for section in sections_by_type:
-      if(any([word in section for word in words_in_section])):
-        return section
-    return ""
-      
+    section_cat = self.get_section_category(section_type)
+    if section_cat in sections_by_type:
+      return section_cat
+    return "" 
 
 
   # Takes all sections from dictionary and splits it based on type
@@ -96,7 +117,7 @@ class Course:
       if len(key):
         sections_by_type[key].append(section)
       else:
-        sections_by_type[section_type] = [section]
+        sections_by_type[self.get_section_category(section_type)] = [section]
 
     return sections_by_type
   
@@ -116,9 +137,21 @@ class Course:
   #      linked([ADA, BL1]) --> False
   def linked(self, section_list):
     for i in section_list:
-      if i.get_name()[0] != section_list[0].get_name()[0]:
+      if (i.get_name()[0] != section_list[0].get_name()[0] or 
+          i.get_term() != section_list[0].get_term()):
         return False
     return True
+
+  # Do not link courses that have incompatible section types
+  # i.e. Laboratory-Discussion and Lecture-Discussion
+  def relink(self, section_ls):
+    has_lab_disc = False
+    has_lecture_disc = False
+    for section in section_ls:
+      if section.get_type() in ["Lecture-Discussion", "Lecture/Discussion", "Online Lecture-Discussion", 
+                                "Online Lecture/Discussion"]:
+        return [section]
+    return section_ls
 
   # gets list of all possible groups of linked sections 
   # (just the required e.g. lab, discussion, lecture) 
@@ -143,9 +176,20 @@ class Course:
     # 3. Delete combos where sections have time conflicts (i.e. one Lecture section is at the
     #    same time as a discussion section
     for combo in combos:
-      if (not self.has_time_conflict(combo)) and self.linked(combo):
+      # if (not self.has_time_conflict(combo)) and self.linked(combo):
+      if not self.has_time_conflict(combo) and ((self.check_linked and self.linked(combo))
+          or not (self.check_linked)):
         linked_sections.append(self.LinkedSection(combo))
     
+    # if len linked_sections is 0 just return the cartesian product
+    # TODO: optimize
+    if not len(linked_sections):
+      combos = it.product(*(sections_by_type[section_name] for section_name in sorted_sections))
+      for combo in combos:
+        if not self.has_time_conflict(combo):
+          new_combo = self.relink(combo)
+          linked_sections.append(self.LinkedSection(new_combo))
+
     return linked_sections
     
   class LinkedSection:

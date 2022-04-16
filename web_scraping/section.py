@@ -16,6 +16,9 @@ class Section:
   days: days the Section meets. i.e. MWF, TR or ASYNC for async section
   start: datetime object representing start time i.e. 08:00:00 or 00:00:00 for async
   end: datetime object representing end time i.e. 08:50:00 or 00:00:00 for async
+  term: term this Section is part of i.e. 1 = whole semester, A = 1st 8 weeks,
+        B = last 8 weeks, N/A means no value provided
+        src: https://registrar.illinois.edu/academic-calendars/academic-calendars-archive/fall-2021-academic-calendar/
   '''
 
   # Initialize Section object given the section name, path to the section's xml file,
@@ -41,7 +44,10 @@ class Section:
   # Initialize location, section type, meeting days, and start and end time
   # from Section XML file
   def init_location(self, section_path):
-    soup = BeautifulSoup(requests.get(section_path).text, "lxml-xml")
+    try:
+      soup = BeautifulSoup(requests.get(section_path).text, "lxml-xml")
+    except:
+      raise ValueError("timeout")
     self.section_type = soup.findAll("type")[0].string
 
     loc = soup.findAll("buildingName")
@@ -71,6 +77,12 @@ class Section:
       self.end = datetime.datetime.strptime(end[0].string, '%I:%M %p')
     except:
       self.end = datetime.datetime.strptime("00:00:00", '%H:%M:%S')
+    
+    term = soup.findAll("partOfTerm")
+    if(len(term)):
+      self.term = term[0].string
+    else:
+      self.term = "N/A"
   
   # Determine if there's an overlap in days between two sections
   # Fixing bug in Section has_time_conflict
@@ -87,7 +99,13 @@ class Section:
   # Get whether two sections have a time conflict
   # If one starts between the other's start and end times, there's a time conflict
   # A section cannot have a time conflict with itself
+  # An ASYNC section cannot have a time conflict with another section
+  # Assumes that course times from different semesters are never compared
   def has_time_conflict(self, other_section):
+
+    if(self.get_days() == 'ASYNC' or other_section.get_days == 'ASYNC'):
+      return False
+
     if (self != other_section and Section.days_overlap(self.get_days(), other_section.get_days())):
       
       if self.start >= other_section.start and self.start <= other_section.end:
@@ -129,6 +147,10 @@ class Section:
   # Get datetime obj representing end time
   def get_end(self):
     return self.end
+  
+  # Get term: "1", "A", "B", or "N/A"
+  def get_term(self):
+    return self.term
   
   # Hash function for section (for dictionary used in distance matrix module)
   def __hash__(self):
