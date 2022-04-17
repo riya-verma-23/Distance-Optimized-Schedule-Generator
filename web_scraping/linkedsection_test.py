@@ -4,7 +4,8 @@ from course import Course
 from section import Section
 import unittest
 
-class TestWebScraping(unittest.TestCase):
+# TODO: global variable of section: test practice
+class TestLinkedSection(unittest.TestCase):
     
     def test_linked_section_init_and_accessors(self):
         section_a = Section('A',
