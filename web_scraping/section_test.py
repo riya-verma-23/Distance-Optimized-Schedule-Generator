@@ -62,6 +62,12 @@ class TestSection(unittest.TestCase):
     aas100_ad2 = Section('AD2',
                 "https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/100/41729.xml",
                 'AAS100')
+    cs124_qbb = Section('QBB',
+                "https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/CS/124/74482.xml",
+                'CS124')
+    las122_j01 = Section('J01',
+                "https://courses.illinois.edu/cisapp/explorer/schedule/2022/fall/LAS/122/58821.xml",
+                'LAS122')
 
     # start at same time
     self.assertTrue(math241_adb.has_time_conflict(aas100_ab))
@@ -71,6 +77,7 @@ class TestSection(unittest.TestCase):
     
     # start and end at same time, overlap in days
     self.assertTrue(math241_al1.has_time_conflict(aas100_ad2))
+    self.assertTrue(cs124_qbb.has_time_conflict(las122_j01))
     
     # after section section
     self.assertFalse(math241_adf.has_time_conflict(aas100_ab))
@@ -102,6 +109,12 @@ class TestSection(unittest.TestCase):
     self.assertTrue(Section.days_overlap("MW", "WF"))
 
     self.assertFalse(Section.days_overlap("MWF", "TR"))
+  
+  def test_get_location_address(self):
+    math241_BD = Section('BD@',
+                  'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/MATH/241/50318.xml',
+                  'MATH241')
+    self.assertEqual(math241_BD.get_location(), '906 W College Ct, Urbana, IL 61801')
   
   def test_hash(self):
     dictionary = {}
