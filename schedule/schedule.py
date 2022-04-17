@@ -137,7 +137,7 @@ class Schedule:
 
 cs225 = Course("spring", "2022", "CS225" )
 # cs233 = Course("spring", "2022", "CS233")
-aas283 = Course("spring", "2022", "AAS283" )
+#aas283 = Course("spring", "2022", "AAS283" )
 stat200 = Course("spring", "2021", "STAT200" )
 schedule =  Schedule(cs225.get_linked_sections())
 # print(schedule.has_time_conflict())
