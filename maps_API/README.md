@@ -1,1 +1,3 @@
- # return location scraped from the course listings page
+ # Maps API
+
+ MapsAPI class encompasses fucntions that return 

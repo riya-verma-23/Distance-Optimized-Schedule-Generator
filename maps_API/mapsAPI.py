@@ -1,9 +1,12 @@
 import sys
-sys.path.insert(0, "web_scraping")
+# sys.path.insert(0, "web_scraping")
+sys.path.append('/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping')
 sys.path.append('/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/schedule')
 from schedule import Schedule
 from course import Course
 from section import Section
+import requests 
+from PIL import Image
 
 class MapsAPI:
     def get_map_API(): 
@@ -50,8 +53,18 @@ class MapsAPI:
                 result.append("https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers +"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA")
         return result
 
-math241 = Course("spring", "2022", "MATH241" )
-schedule =  Schedule(math241.get_linked_sections())
+cs374 = Course("spring", "2022", "CS374" )
+schedule =  Schedule(cs374.get_linked_sections())
 schedule_locations = schedule.return_locations()
-print(MapsAPI.map_API_schedule(schedule_locations)[3])
+print(MapsAPI.map_API_schedule(schedule_locations)[4])
 print(schedule_locations)
+
+
+
+# response = requests.get("https://maps.googleapis.com/maps/api/staticmap?size=600x300&markers=color:gray%7Clabel:1%7C\"Siebel+Center+for+Comp+Sci+uiuc illinois\"&markers=color:green%7Clabel:2%7C\"Campus+Instructional+Facility+uiuc illinois\"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA")
+
+# file = open("sample_image.png", "wb")
+# file.write(response.content)
+# file.close()
+# result = open("ballet_image.png","rb").read() == open("staticmap_374.png","rb").read()
+# print(result)
