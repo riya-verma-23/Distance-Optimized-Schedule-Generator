@@ -1,3 +1,4 @@
+from pickle import NONE
 import requests
 import json
 from array import *
@@ -8,6 +9,7 @@ from csv import writer
 sys.path.insert(0, 'web_scraping')
 sys.path.insert(1, 'schedule')
 from schedule import Schedule
+from csv import reader
 
 '''
 This class is used to calculate the best distance optimized schedule
@@ -119,7 +121,7 @@ class Distance:
 		for t in tuples:
 			section = [t[0], t[1]]
 			if (not(t[0].get_location(), t[1].get_location()) in Distance.api_calls) & (not(t[1].get_location(), t[0].get_location()) in Distance.api_calls):
-				if(t[0].get_location() != t[1].get_location()): #to make sure same locations not called
+				if(t[0].get_location() != t[1].get_location() and Distance.tuple_in_file((t[0].get_location(), t[1].get_location())) == NONE): #to make sure same locations not called
 					Distance.count_api_calls+=1
 					if Distance.count_api_calls > 25: print("API calls exceeded, program terminated.")
 					else: Distance.append_to_dictionary(section)
@@ -131,6 +133,8 @@ class Distance:
 				perimeter += Distance.api_calls[t_loc_1]
 			elif (t_loc_2 in Distance.api_calls):
 				perimeter += Distance.api_calls[t_loc_2]
+			elif (Distance.tuple_in_file(t_loc_1) != NONE):
+				perimeter += Distance.tuple_in_file(t_loc_1)
 		return perimeter
 	
 	#generates all valid schedule combinations without time conflicts by picking one linked section from each course
@@ -214,6 +218,7 @@ class Distance:
 				best_schedule.append(all_schedules[i])
 		Distance.best = best_schedule
 		Distance.set_worst_schedule(all_schedules)
+		Distance.write_to_api_json()
 	
 	def best_schedule(courses):
 		Distance.set_best_worst_schedule(courses)
@@ -301,3 +306,21 @@ class Distance:
 		print(len(Distance.api_calls))
 		for key, value in Distance.api_calls.items():
 			print(key, value)
+	
+	def write_to_api_json():
+		with open('api_calls.csv', 'a+', newline='') as write_obj:
+			csv_writer = writer(write_obj)
+			for key, value in Distance.api_calls.items():
+				list = [key[0], key[1], value]
+				if Distance.tuple_in_file(key) == NONE:
+					csv_writer.writerow(list)
+    
+	#if the tuple is in file, returns location, else returns NONE
+	def tuple_in_file(tuple):
+		with open('api_calls.csv', 'r') as read_obj:
+			csv_reader = reader(read_obj)
+			for row in csv_reader:
+				if (row[0], row[1]) == (tuple[0], tuple[1]) or (row[1], row[0]) == (tuple[0], tuple[1]):
+					return float(row[2])
+			return NONE
+			
