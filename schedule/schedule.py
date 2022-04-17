@@ -26,11 +26,11 @@ class Schedule:
     def set_score(self, score):
         self.score = score
 
-    # get linked_sections list for given course 
+    # get linked_sections list for given schedule 
     def get_linked_sections(self):
         return self.linked_sections
 
-    # set linked_sections list for given course 
+    # set linked_sections list for given schedule 
     def set_linked_sections(self, linked_section):
         self.linked_sections = linked_section
 

@@ -9,7 +9,8 @@ import requests
 from PIL import Image
 
 class MapsAPI:
-    def get_map_API(): 
+    # geneates map API for inputted locations
+    def generate_map_API(): 
         marker1 = raw_input("Enter the first class location: ")
         marker2 = raw_input("Enter the second class location: ")
         marker3 = raw_input("Enter the third class location: ")
@@ -21,7 +22,7 @@ class MapsAPI:
         return "https://maps.googleapis.com/maps/api/staticmap?size=600x300" + "&markers=color:blue%7Clabel:1%7C" +marker1_adjusted+  "&markers=color:green%7Clabel:2%7C" +marker2_adjusted+"&markers=color:red%7Clabel:3%7C" +marker3_adjusted+ "&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA"
 
 # genereates map APIs based on a list of locations
-    def generate_map_API(locations): 
+    def generate_map_API_locations(locations): 
         adjusted_locations = []
         for location in locations:
             adjusted_locations.append('"'+location.replace(' ', '+', )+"+uiuc" + '"')
@@ -34,7 +35,7 @@ class MapsAPI:
 
     # generates maps APIs for given schedule
     # returns list of API calls for each days schedule
-    def map_API_schedule(schedule): 
+    def generate_map_API_schedule(schedule): 
         locations, result = [], []
         for day in schedule:
             locations_per_day = []
