@@ -4,8 +4,9 @@ import unittest
 
 # TODO: global variable of section: test practice
 # TODO: global variable of course: test practice
-# TODO: validation
 # TODO: score threshold for generated schedules
+# TODO: make sure linked sections always works for valid input
+# TODO: comment what cases tests cover
 # when the frontend and backend are linked we can each work on fullstack features
 # for each of these features new branch
 # for next week link front and back and make sure it works then discuss w tyler 
@@ -121,10 +122,10 @@ class TestWebScraping(unittest.TestCase):
                 'https://courses.illinois.edu/cisapp/explorer/schedule/2022/spring/AAS/283/71838.xml',
                 'AAS283')
     self.assertEqual(sections_split["Lecture"][0], aas100_al1)
-    self.assertEqual(sections_split["Discussion/Recitation"][0], aas100_ad1)
-    self.assertEqual(sections_split["Discussion/Recitation"][1], aas100_ad2)
-    self.assertEqual(sections_split["Discussion/Recitation"][2], aas100_ad3)
-    self.assertEqual(sections_split["Discussion/Recitation"][3], aas100_ad4)
+    self.assertEqual(sections_split["Discussion"][0], aas100_ad1)
+    self.assertEqual(sections_split["Discussion"][1], aas100_ad2)
+    self.assertEqual(sections_split["Discussion"][2], aas100_ad3)
+    self.assertEqual(sections_split["Discussion"][3], aas100_ad4)
   
   def test_linked_term(self):
 
