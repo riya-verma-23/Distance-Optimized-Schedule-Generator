@@ -5,6 +5,7 @@ import datetime
 
 
 class Section:
+  # TODO: scrape from registration page for linked section (not major issue don't worry)
   '''
   Creates a Section object
   
@@ -19,7 +20,15 @@ class Section:
   term: term this Section is part of i.e. 1 = whole semester, A = 1st 8 weeks,
         B = last 8 weeks, N/A means no value provided
         src: https://registrar.illinois.edu/academic-calendars/academic-calendars-archive/fall-2021-academic-calendar/
+  
+  Static variables:
+  addresses: Dictionary that maps self.location to address, if location + UIUC 
+  cannot be found with the Google Maps API
   '''
+
+  addresses = {
+    'Pennsylvania Lounge Bld - PAR':'906 W College Ct, Urbana, IL 61801'
+  }
 
   # Initialize Section object given the section name, path to the section's xml file,
   # and its Course
@@ -134,6 +143,8 @@ class Section:
 
   # Get location e.g. "Altgeld Hall"
   def get_location(self):
+    if self.location in Section.addresses:
+      return Section.addresses[self.location]
     return self.location
 
   # Get days the section meets e.g. "TR"
