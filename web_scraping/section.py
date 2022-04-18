@@ -5,6 +5,7 @@ import datetime
 
 
 class Section:
+  # TODO: scrape from registration page for linked section (not major issue don't worry)
   '''
   Creates a Section object
   
@@ -16,12 +17,23 @@ class Section:
   days: days the Section meets. i.e. MWF, TR or ASYNC for async section
   start: datetime object representing start time i.e. 08:00:00 or 00:00:00 for async
   end: datetime object representing end time i.e. 08:50:00 or 00:00:00 for async
+  term: term this Section is part of i.e. 1 = whole semester, A = 1st 8 weeks,
+        B = last 8 weeks, N/A means no value provided
+        src: https://registrar.illinois.edu/academic-calendars/academic-calendars-archive/fall-2021-academic-calendar/
+  
+  Static variables:
+  addresses: Dictionary that maps self.location to address, if location + UIUC 
+  cannot be found with the Google Maps API
   '''
+
+  addresses = {
+    'Pennsylvania Lounge Bld - PAR':'906 W College Ct, Urbana, IL 61801'
+  }
 
   # Initialize Section object given the section name, path to the section's xml file,
   # and its Course
-  def __init__(self, name, section_path, course):
-    self.course = course.subject + course.num
+  def __init__(self, name, section_path, course_str):
+    self.course = course_str
     self.name = name
     self.init_location(section_path)
 
@@ -41,7 +53,10 @@ class Section:
   # Initialize location, section type, meeting days, and start and end time
   # from Section XML file
   def init_location(self, section_path):
-    soup = BeautifulSoup(requests.get(section_path).text, "lxml-xml")
+    try:
+      soup = BeautifulSoup(requests.get(section_path).text, "lxml-xml")
+    except:
+      raise ValueError("timeout")
     self.section_type = soup.findAll("type")[0].string
 
     loc = soup.findAll("buildingName")
@@ -71,13 +86,37 @@ class Section:
       self.end = datetime.datetime.strptime(end[0].string, '%I:%M %p')
     except:
       self.end = datetime.datetime.strptime("00:00:00", '%H:%M:%S')
+    
+    term = soup.findAll("partOfTerm")
+    if(len(term)):
+      self.term = term[0].string
+    else:
+      self.term = "N/A"
   
+  # Determine if there's an overlap in days between two sections
+  # Fixing bug in Section has_time_conflict
+  # Example: one course has WF, other MW. Before this change, 
+  # this days overlap would not be detected
+  def days_overlap(days, days1):
+    if days == days1:
+      return True
+    for day in days:
+      if day in days1:
+        return True
+    return False
+
   # Get whether two sections have a time conflict
   # If one starts between the other's start and end times, there's a time conflict
   # A section cannot have a time conflict with itself
+  # An ASYNC section cannot have a time conflict with another section
+  # Assumes that course times from different semesters are never compared
   def has_time_conflict(self, other_section):
-    if self != other_section and\
-     (self.days in other_section.get_days() or other_section.get_days() in self.days):
+
+    if(self.get_days() == 'ASYNC' or other_section.get_days == 'ASYNC'):
+      return False
+
+    if (self != other_section and Section.days_overlap(self.get_days(), other_section.get_days())):
+      
       if self.start >= other_section.start and self.start <= other_section.end:
         return True
       if other_section.start >= self.start and other_section.start <= self.end:
@@ -87,8 +126,8 @@ class Section:
   # Determine whether two sections are linked
   # If two sections belong to the same course and have the same first letter, they're linked
   def linked(self, other_section):
-    return (self.course == other_section.course) and\
-     (self.name[0] == other_section.get_name()[0])
+    return ((self.course == other_section.course) and 
+    (self.name[0] == other_section.get_name()[0]))
   
   # Get course name this section belongs to 
   def get_course(self):
@@ -104,6 +143,8 @@ class Section:
 
   # Get location e.g. "Altgeld Hall"
   def get_location(self):
+    if self.location in Section.addresses:
+      return Section.addresses[self.location]
     return self.location
 
   # Get days the section meets e.g. "TR"
@@ -117,3 +158,12 @@ class Section:
   # Get datetime obj representing end time
   def get_end(self):
     return self.end
+  
+  # Get term: "1", "A", "B", or "N/A"
+  def get_term(self):
+    return self.term
+  
+  # Hash function for section (for dictionary used in distance matrix module)
+  def __hash__(self):
+      return (hash((self.name, self.section_type, self.location,
+       self.start.strftime("%H:%M"), self.end.strftime("%H:%M"), self.days, self.course)))
