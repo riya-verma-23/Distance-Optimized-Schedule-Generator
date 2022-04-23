@@ -21,7 +21,7 @@ class MapsAPI:
         #print marker1_adjusted
         return "https://maps.googleapis.com/maps/api/staticmap?size=600x300" + "&markers=color:blue%7Clabel:1%7C" +marker1_adjusted+  "&markers=color:green%7Clabel:2%7C" +marker2_adjusted+"&markers=color:red%7Clabel:3%7C" +marker3_adjusted+ "&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA"
 
-# genereates map APIs based on a list of locations
+    # genereates map APIs based on a list of locations
     def generate_map_API_locations(locations): 
         adjusted_locations = []
         for location in locations:
@@ -35,7 +35,7 @@ class MapsAPI:
 
     # generates maps APIs for given schedule
     # returns list of API calls for each days schedule
-    def generate_map_API_schedule(schedule): 
+    def map_API_schedule(schedule): 
         locations, result = [], []
         for day in schedule:
             locations_per_day = []
@@ -53,19 +53,3 @@ class MapsAPI:
             else:
                 result.append("https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers +"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA")
         return result
-
-cs374 = Course("spring", "2022", "CS374" )
-schedule =  Schedule(cs374.get_linked_sections())
-schedule_locations = schedule.return_locations()
-print(MapsAPI.map_API_schedule(schedule_locations)[4])
-print(schedule_locations)
-
-
-
-# response = requests.get("https://maps.googleapis.com/maps/api/staticmap?size=600x300&markers=color:gray%7Clabel:1%7C\"Siebel+Center+for+Comp+Sci+uiuc illinois\"&markers=color:green%7Clabel:2%7C\"Campus+Instructional+Facility+uiuc illinois\"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA")
-
-# file = open("sample_image.png", "wb")
-# file.write(response.content)
-# file.close()
-# result = open("ballet_image.png","rb").read() == open("staticmap_374.png","rb").read()
-# print(result)

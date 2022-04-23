@@ -1,11 +1,9 @@
 import sys
 import requests
 import warnings
-# sys.path.insert(0, "web_scraping")
-# sys.path.insert(0, "schedule")
+sys.path.insert(0, "web_scraping")
+sys.path.insert(0, "schedule")
 
-sys.path.append('/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping')
-sys.path.append('/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/schedule')
 from course import Course
 from section import Section
 from schedule import Schedule
@@ -70,18 +68,18 @@ class TestMapsAPI(unittest.TestCase):
         file = open("CS_374_map.png", "wb")
         file.write(response.content)
         file.close()
-        self.assertTrue(open("CS_374_map.png","rb").read() == open("staticmap_CS374.png","rb").read())
+        self.assertTrue(open("CS_374_map.png","rb").read() == open("mapsAPI/test_maps/staticmap_CS374.png","rb").read()) 
 
-    def test_241_image_api(self):
-        math241 = Course("spring", "2022", "MATH241" )
-        schedule =  Schedule(math241.get_linked_sections())
-        api = MapsAPI.map_API_schedule(schedule.return_locations())[4]
-        response = requests.get(api)
+    # def test_241_image_api(self):
+    #     math241 = Course("spring", "2022", "MATH241" )
+    #     schedule =  Schedule(math241.get_linked_sections())
+    #     api = MapsAPI.map_API_schedule(schedule.return_locations())[4]
+    #     response = requests.get(api)
 
-        file = open("Math_241_map.png", "wb")
-        file.write(response.content)
-        file.close()
-        self.assertTrue(open("Math_241_map.png","rb").read() == open("staticmap_Math241.png","rb").read())
+    #     file = open("Math_241_map.png", "wb")
+    #     file.write(response.content)
+    #     file.close()
+    #     self.assertTrue(open("Math_241_map.png","rb").read() == open("mapsAPI/test_maps/staticmap_Math241.png","rb").read())
 
     def test_241_incorrect_image_api(self):
         math241 = Course("spring", "2022", "MATH241" )
@@ -92,7 +90,7 @@ class TestMapsAPI(unittest.TestCase):
         file = open("Math_241_map_Thursday.png", "wb")
         file.write(response.content)
         file.close()
-        self.assertFalse(open("Math_241_map_Thursday.png","rb").read() == open("staticmap_Math241.png","rb").read())
+        self.assertFalse(open("Math_241_map_Thursday.png","rb").read() == open("mapsAPI/test_maps/staticmap_Math241.png","rb").read())
 
     def test_image_size(self):
         cs374 = Course("spring", "2022", "CS374" )
@@ -100,10 +98,10 @@ class TestMapsAPI(unittest.TestCase):
         schedule_locations = schedule.return_locations()
         api = MapsAPI.map_API_schedule(schedule_locations)[2]
         response = requests.get(api)
-        file = open("staticmap_374_size.png", "wb")
+        file = open("CS374_map_size.png", "wb")
         file.write(response.content)
         file.close()
-        im = Image.open('staticmap_374_size.png')
+        im = Image.open('CS374_map_size.png')
         width, height = im.size
         self.assertEqual(width, 600)
         self.assertEqual(height, 300)
