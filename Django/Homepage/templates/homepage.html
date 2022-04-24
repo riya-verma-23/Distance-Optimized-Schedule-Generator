@@ -76,13 +76,15 @@
     {% if classes %}
     <section class="schedule" id="schedule">
         <div class="max-width">
+            {% if sections %}
             <p>Here is your Distance Optimized Schedule:</p>
+            {% endif %}
             <div class="card one">
+                {% if maps_link %}
                 <div class="map" id="map">
-                    <iframe width="600" height="450" style="border:0" loading="lazy" allowfullscreen
-                        src="{{maps_link}}">
-                    </iframe>
+                    <img src="{{maps_link}}" width="600" height="450">
                 </div>
+                {% endif %}
                 <table>
                     <tr>
                         {% for class in classes %}

@@ -1,3 +1,4 @@
+import imp
 import os
 import sys
 
@@ -10,11 +11,14 @@ sys.path.append(os.path.join(os.path.dirname(
     sys.path[0]), 'schedule'))
 sys.path.append(os.path.join(os.path.dirname(
     sys.path[0]), 'distances_optimize'))
+sys.path.append(os.path.join(os.path.dirname(
+    sys.path[0]), 'maps'))
 
 from section import Section
 from course import Course
 from schedule import Schedule
 from distances import Distance
+from mapsAPI import generateMapAPITwo
 
 # Create your views here.
 
@@ -23,7 +27,6 @@ from distances import Distance
 
 # Restrict API key
 # frontend_components = {
-#     'maps_link': 'https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJf5sYMRrXDIgRv9cFI6s4og8&destination=place_id:ChIJqXmEqmvXDIgRMJY1DdQBn04&key=AIzaSyC5EWe12L9MWFK0Um6aRdVkZd6eMETlNnY',
 #     'class_1': 'CS 225',
 #     'class_2': 'CS 222',
 #     'class_3': 'CS 233',
@@ -49,7 +52,7 @@ def homepage(request):
     semester = None
     year = None
     classes = []
-    maps_link = 'https://www.google.com/maps/embed/v1/directions?origin=place_id:ChIJf5sYMRrXDIgRv9cFI6s4og8&destination=place_id:ChIJqXmEqmvXDIgRMJY1DdQBn04&key=AIzaSyC5EWe12L9MWFK0Um6aRdVkZd6eMETlNnY'
+    maps_link = None
     sections = []
 
     if request.method == "POST":
@@ -108,7 +111,7 @@ def generate_schedule(request):
         course_list=[]
         for course in request.session['classes']:
             course_list.append(Course(request.session['semester'], request.session['year'], course))
-            #print(course_list[size(course_list)-1])
+            print(course_list[size(course_list)-1])
 
         schedules=Distance.best_schedule(course_list) #Bug with CS 440, Math 416 + Input Validation (Fall 2021?)
                                                       #Index out of bounds at line 188 or sections not found(ln 145)
@@ -120,10 +123,10 @@ def generate_schedule(request):
             section_list.append(course[0].get_name())
         
         for course in best_schedule.get_linked_sections():
-            #print(course[0].get_course()+" "+course[0].get_name()+" "+course[0].get_location())
             location_list.append(course[0].get_location())
-            print(course[0].get_location())
         
         request.session['sections']=section_list
+        request.session['maps_link']=generateMapAPITwo(location_list)
+        #print(request.session['maps_link'])
         
     return homepage(request)

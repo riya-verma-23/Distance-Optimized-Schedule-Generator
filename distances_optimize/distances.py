@@ -32,7 +32,7 @@ class Distance:
 		#reads in api key
 		api_key = ''
 		try:
-			with open('/Users/nalintiwary/Documents/CS 222 Project/course-project-tyk-b/distances_optimize/api_key.txt', 'r') as f:
+			with open('distances_optimize/api_key', 'r') as f:
 				api_key = f.read().strip()
 		except FileNotFoundError:
 			print("'%s' file not found" % 'api_key')
