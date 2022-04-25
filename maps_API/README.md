@@ -1,1 +1,0 @@
- # return location scraped from the course listings page
