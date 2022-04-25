@@ -12,7 +12,7 @@ sys.path.append(os.path.join(os.path.dirname(
 sys.path.append(os.path.join(os.path.dirname(
     sys.path[0]), 'distances_optimize'))
 sys.path.append(os.path.join(os.path.dirname(
-    sys.path[0]), 'maps'))
+    sys.path[0]), 'mapsAPI'))
 
 from section import Section
 from course import Course

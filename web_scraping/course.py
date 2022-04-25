@@ -28,8 +28,9 @@ class Course:
   '''
   strainer = SoupStrainer("section")
 
+  # TODO: implement using up-trees (if scraping from registration doesn't pan out)
   section_types = {
-    "Discussion":{"Online Discussion", "Discussion", "Online Discussion"},
+    "Discussion":{"Online Discussion", "Discussion", "Discussion/Recitation"},
     "Lecture":{"Lecture-Discussion", "Lecture/Discussion", "Lecture", "Online Lecture-Discussion", 
               "Online Lecture",  "Online Lecture/Discussion"},
     "Lab":{"Laboratory-Discussion", "Laboratory/Discussion", "Online Lab", "Laboratory", "Online Lab"},
@@ -267,3 +268,11 @@ class Course:
     for section in self.sections:
       section_ls.append(self.sections[section])
     return section_ls
+  
+  # Print linked sections. Used in debugging
+  def print_linked(self):
+    linked = self.get_linked_sections()
+    for l in linked:
+        for section in l:
+            print(section.get_name())
+        print('\n')
