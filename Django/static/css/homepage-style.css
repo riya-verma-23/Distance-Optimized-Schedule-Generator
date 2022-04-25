@@ -16,6 +16,11 @@ html{
     margin: auto
 }
 
+.main {
+    max-width: 500px;
+    margin: auto;
+  }
+
 /* Title styling */
 
 .title{
@@ -45,7 +50,7 @@ html{
 }
 
 .inputs .field .text-box{
-    width: 40%;
+    width: 70%;
     margin-left: 50%;
     border-radius: 20px;
     background: #ffac12;
@@ -59,6 +64,7 @@ html{
 
 .inputs .field .text-box input{
     border: none;
+    width: 70%;
     background: #ffac12;
 }
 
