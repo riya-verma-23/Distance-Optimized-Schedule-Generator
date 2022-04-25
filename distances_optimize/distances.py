@@ -308,7 +308,7 @@ class Distance:
 			print(key, value)
 	
 	def write_to_api_json():
-		with open('api_calls.csv', 'a+', newline='') as write_obj:
+		with open('distances_optimize/api_calls.csv', 'a+', newline='') as write_obj:
 			csv_writer = writer(write_obj)
 			for key, value in Distance.api_calls.items():
 				list = [key[0], key[1], value]
@@ -317,7 +317,7 @@ class Distance:
     
 	#if the tuple is in file, returns location, else returns NONE
 	def tuple_in_file(tuple):
-		with open('api_calls.csv', 'r') as read_obj:
+		with open('distances_optimize/api_calls.csv', 'r') as read_obj:
 			csv_reader = reader(read_obj)
 			for row in csv_reader:
 				if (row[0], row[1]) == (tuple[0], tuple[1]) or (row[1], row[0]) == (tuple[0], tuple[1]):
