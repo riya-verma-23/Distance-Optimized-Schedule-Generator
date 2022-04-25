@@ -13,7 +13,7 @@ sys.path.append(os.path.join(os.path.dirname(
 from csv import writer
 # sys.path.insert(0, 'web_scraping')
 # sys.path.insert(1, 'schedule')
-from schedule import Schedule
+from schedule_class import Schedule
 from csv import reader
 
 '''
@@ -39,7 +39,9 @@ class Distance:
 		#reads in api key
 		api_key = ''
 		try:
-			with open('distances_optimize/api_key', 'r') as f:
+			path = os.path.abspath(os.path.join(os.path.pardir, 'distances_optimize/api_key.txt'))
+			print(path)
+			with open(path, 'r') as f:
 				api_key = f.read().strip()
 		except FileNotFoundError:
 			print("'%s' file not found" % 'api_key')
@@ -313,7 +315,8 @@ class Distance:
 			print(key, value)
 	
 	def write_to_api_json():
-		with open('distances_optimize/api_calls.csv', 'a+', newline='') as write_obj:
+		path = os.path.abspath(os.path.join(os.path.pardir, 'distances_optimize/api_calls.csv'))
+		with open(path, 'a+', newline='') as write_obj:
 			csv_writer = writer(write_obj)
 			for key, value in Distance.api_calls.items():
 				list = [key[0], key[1], value]
@@ -322,7 +325,9 @@ class Distance:
     
 	#if the tuple is in file, returns location, else returns NONE
 	def tuple_in_file(tuple):
-		with open('distances_optimize/api_calls.csv', 'r') as read_obj:
+		path = os.path.abspath(os.path.join(os.path.pardir, 'distances_optimize/api_calls.csv'))
+		print(path)
+		with open(path, 'r') as read_obj:
 			csv_reader = reader(read_obj)
 			for row in csv_reader:
 				if (row[0], row[1]) == (tuple[0], tuple[1]) or (row[1], row[0]) == (tuple[0], tuple[1]):

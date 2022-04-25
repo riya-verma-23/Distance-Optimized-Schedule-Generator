@@ -11,6 +11,7 @@ lxml = "4.8.0"
 requests = "2.27.1"
 urllib3 = "1.26.8"
 numpy = "*"
+pillow = "*"
 
 [dev-packages]
 

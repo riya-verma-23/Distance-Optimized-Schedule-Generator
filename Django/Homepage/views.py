@@ -12,13 +12,13 @@ sys.path.append(os.path.join(os.path.dirname(
 sys.path.append(os.path.join(os.path.dirname(
     sys.path[0]), 'distances_optimize'))
 sys.path.append(os.path.join(os.path.dirname(
-    sys.path[0]), 'mapsAPI'))
-
+    sys.path[0]), 'maps'))
+print(sys.path)
 from section import Section
 from course import Course
-from schedule import Schedule
+from schedule_class import Schedule
 from distances import Distance
-from mapsAPI import generateMapAPITwo
+from mapsAPI import MapsAPI
 
 # Create your views here.
 
@@ -126,7 +126,7 @@ def generate_schedule(request):
             location_list.append(course[0].get_location())
         
         request.session['sections']=section_list
-        request.session['maps_link']=generateMapAPITwo(location_list)
+        request.session['maps_link']=MapsAPI.generate_map_API(location_list)
         #print(request.session['maps_link'])
         
     return homepage(request)
