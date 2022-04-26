@@ -126,16 +126,12 @@ html{
 
 /* Map Styling */
 
-.schedule .card{
-    width: 100%;
-}
 
-
-.schedule .card .map .map, img{
-    width: 700px;
-    height: 500px;
-    display: block;
-    margin: 0 auto;
+.schedule img{
+  width: 700px;
+  height: 500px;
+  display: block;
+  margin: auto;
 }
 
 

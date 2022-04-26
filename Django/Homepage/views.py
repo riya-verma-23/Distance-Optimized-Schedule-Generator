@@ -22,37 +22,12 @@ from mapsAPI import MapsAPI
 
 # Create your views here.
 
-# frontend_components is a dictionary of parameters that have to be
-# displayed on the homepage that should be recived from the backend
-
-# Restrict API key
-# frontend_components = {
-#     'class_1': 'CS 225',
-#     'class_2': 'CS 222',
-#     'class_3': 'CS 233',
-#     'class_4': 'MATH 257',
-#     'class_5': 'ANTH 103',
-#     'section_1_1': 'AL2',
-#     'section_1_2': 'AL3',
-#     'section_2_1': 'DC2',
-#     'section_2_2': 'CL8',
-#     'section_3_1': 'M8',
-#     'section_3_2': 'GR8',
-#     'section_4_1': 'R2',
-#     'section_4_2': 'D2',
-#     'section_5_1': 'C3',
-#     'section_5_2': 'P0',
-# }
-
-
-# Maps api requires locations list
-# Course.py no input validation needed
 
 def homepage(request):
     semester = None
     year = None
     classes = []
-    maps_link = None
+    map_links = []
     sections = []
 
     if request.method == "POST":
@@ -83,12 +58,12 @@ def homepage(request):
     if 'sections' in request.session:
         sections = request.session['sections']
     
-    if 'maps_link' in request.session:
-        maps_link = request.session['maps_link']
+    if 'map_links' in request.session:
+        map_links = request.session['map_links']
 
     context = {
         'semester': semester, 'year': year,
-        'maps_link': maps_link, 'classes': classes,
+        'map_links': map_links, 'classes': classes,
         'sections': sections}
 
     return render(request, 'homepage.html', context)
@@ -100,7 +75,7 @@ def reset_session(request):
         del request.session['semester']
         del request.session['year']
         del request.session['sections']
-        del request.session['maps_link']
+        del request.session['map_links']
     except KeyError:
         pass
     return homepage(request)
@@ -113,20 +88,18 @@ def generate_schedule(request):
             course_list.append(Course(request.session['semester'], request.session['year'], course))
             print(course_list[size(course_list)-1])
 
-        schedules=Distance.best_schedule(course_list) #Bug with CS 440, Math 416 + Input Validation (Fall 2021?)
-                                                      #Index out of bounds at line 188 or sections not found(ln 145)
+        schedules=Distance.best_schedule(course_list)
+
         best_schedule=schedules[0]
         section_list=[]
         location_list=[]
         for course in best_schedule.get_linked_sections():
-            #print(course[0].get_course()+" "+course[0].get_name()+" "+course[0].get_location())
             section_list.append(course[0].get_name())
         
         for course in best_schedule.get_linked_sections():
             location_list.append(course[0].get_location())
         
         request.session['sections']=section_list
-        request.session['maps_link']=MapsAPI.generate_map_API(location_list)
-        #print(request.session['maps_link'])
+        request.session['map_links']=MapsAPI.map_API_schedule(best_schedule)
         
     return homepage(request)
