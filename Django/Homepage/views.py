@@ -92,12 +92,13 @@ def generate_schedule(request):
 
         best_schedule=schedules[0]
         section_list=[]
-        location_list=[]
         for course in best_schedule.get_linked_sections():
-            section_list.append(course[0].get_name())
+            linked_sections=''
+            for linked_section in course:
+                linked_sections+=linked_section.get_name()+' '
+
+            section_list.append(linked_sections)
         
-        for course in best_schedule.get_linked_sections():
-            location_list.append(course[0].get_location())
         
         request.session['sections']=section_list
         request.session['map_links']=MapsAPI.map_API_schedule(best_schedule)
