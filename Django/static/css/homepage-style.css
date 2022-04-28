@@ -28,10 +28,11 @@ html{
     padding: 30px 0;
     font-family: 'Montserrat', sans-serif;
     margin-bottom: 40px;
+    /* border-bottom: #16140413 solid 5px; */
 }
 
 .title h1{
-    font-size: 30px;
+    font-size: 35px;
     font-weight: 300;
     text-align: center;
     color: #e7c819;
@@ -51,15 +52,17 @@ html{
 
 .inputs .field .text-box{
     width: 70%;
-    margin-left: 50%;
-    border-radius: 20px;
+    margin-left: 15%;
+    border-radius: 15px;
     background: #ffac12;
-    padding: 10px 0px 10px 40px;
+    padding: 10px 5px 10px 5px;
     transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
 }
 
 .inputs .field .text-box:hover{
-    transform: scale(1.05);
+    transform: scale(1.07);
 }
 
 .inputs .field .text-box input{
@@ -77,6 +80,10 @@ html{
     border-radius: 8px;
     background: #ffac12;
     transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    left: -70px;
+    text-align: center;
 }
 
 .inputs button:hover{

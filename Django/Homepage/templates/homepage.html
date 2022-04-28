@@ -32,13 +32,18 @@
                 <div class="field">
                     <div class="text-box">
                         <label for="Semester">Semester:</label>
-                        <input type="text" name="sem" id="sem" required>
+                        <select name="sem" id="sem" required>
+                            <option value="Fall">Fall</option>
+                            <option value="Spring">Spring</option>
+                            <option value="Summer">Summer</option>
+                            <option value="Winter">Winter</option>
+                          </select>
                     </div>
                 </div>
                 <div class="field">
                     <div class="text-box">
                         <label for="Year">Year:</label>
-                        <input type="text" name="year" id="year" required>
+                        <input type="text" name="year" id="year" required onblur="yearValidation(this.value,event)" onkeypress="yearValidation(this.value,event)">
                     </div>
                 </div>
                 {% else %}
@@ -51,7 +56,7 @@
                 <div class="field">
                     <div class="text-box">
                         <label for="Course No">Course No:</label>
-                        <input type="text" name="course_no" id="course_no">
+                        <input type="number" name="course_no" id="course_no" required onkeyup="if(this.value<0)this.value=1" onblur="if(this.value<0)this.value=1">
                     </div>
                 </div>
                 <!-- <div class="card">
@@ -157,6 +162,29 @@
             }
             slides[slideIndex - 1].style.display = "block";
             dots[slideIndex - 1].className += " active";
+        }
+// from stackexchange
+        function yearValidation(year,ev) {
+            var text = /^[0-9]+$/;
+            if(ev.type=="blur" || year.length==4 && ev.keyCode!=8 && ev.keyCode!=46) {
+                if (year != 0) {
+                    if ((year != "") && (!text.test(year))) {
+                        alert("Please Enter Numeric Values Only");
+                        return false;
+                    }
+
+                    if (year.length != 4) {
+                        alert("Year is not proper. Please check");
+                        return false;
+                    }
+                    var current_year=new Date().getFullYear();
+                    if((year < 1920) || (year > current_year)) {
+                        alert("Year should be in range 1920 to current year");
+                        return false;
+                    }
+                    return true;
+                } 
+            }
         }
     </script>
 

@@ -13,7 +13,6 @@ sys.path.append(os.path.join(os.path.dirname(
     sys.path[0]), 'distances_optimize'))
 sys.path.append(os.path.join(os.path.dirname(
     sys.path[0]), 'maps'))
-print(sys.path)
 from section import Section
 from course import Course
 from schedule_class import Schedule
@@ -31,7 +30,7 @@ def homepage(request):
     sections = []
 
     if request.method == "POST":
-        # print(request.POST)  # Printing out the user input from the Front End
+        print(request.POST)  # Printing out the user input from the Front End
         if 'sem' in request.POST:
             request.session['semester'] = request.POST['sem']
             request.session['year'] = request.POST['year']
@@ -101,5 +100,6 @@ def generate_schedule(request):
         
         request.session['sections']=section_list
         request.session['map_links']=MapsAPI.map_API_schedule(best_schedule)
+        request.session['days'] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         
     return homepage(request)

@@ -40,7 +40,6 @@ class Distance:
 		api_key = ''
 		try:
 			path = os.path.abspath(os.path.join(os.path.pardir, 'distances_optimize/api_key.txt'))
-			print(path)
 			with open(path, 'r') as f:
 				api_key = f.read().strip()
 		except FileNotFoundError:
@@ -164,7 +163,6 @@ class Distance:
 			#Append the courses given the index combination to generate a schedule
 			for i in range(n):
 				schedule.append(ll[i][indexes[i]])
-				# print("index", i)
 			
 			s = Schedule(schedule)
 			if (not(s.has_time_conflict())):
@@ -210,6 +208,7 @@ class Distance:
 	def set_best_worst_schedule(courses):
 		Distance.count_api_calls = 0 #reset api call count
 		all_schedules = Distance.generate_schedule_combinations(courses)
+		print("all schedules len", len(all_schedules))
 		Distance.score_all_schedules(all_schedules)
 		min = float("inf")
 		best_schedule = []
@@ -281,7 +280,6 @@ class Distance:
 			#Append the courses given the index combination to generate a schedule
 			for i in range(n):
 				schedule.append(ll[i][indexes[i]])
-				# print("index", i)
 			
 			s = Schedule(schedule)
 			if (not(s.has_time_conflict())):
@@ -326,7 +324,6 @@ class Distance:
 	#if the tuple is in file, returns location, else returns NONE
 	def tuple_in_file(tuple):
 		path = os.path.abspath(os.path.join(os.path.pardir, 'distances_optimize/api_calls.csv'))
-		print(path)
 		with open(path, 'r') as read_obj:
 			csv_reader = reader(read_obj)
 			for row in csv_reader:
