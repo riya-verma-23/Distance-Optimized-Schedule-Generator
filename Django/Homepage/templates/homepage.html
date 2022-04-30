@@ -56,7 +56,7 @@
                 <div class="field">
                     <div class="text-box">
                         <label for="Course No">Course No:</label>
-                        <input type="number" name="course_no" id="course_no" required onkeyup="if(this.value<0)this.value=1" onblur="if(this.value<0)this.value=1">
+                        <input type="number" name="course_no" id="course_no" required min="100" max="999">
                     </div>
                 </div>
                 <!-- <div class="card">
@@ -68,11 +68,10 @@
                 {% endif %}
 
                 {% if classes %}
-                <button type="menu"><a href="{% url 'generate' %}" class="btn btn-primary">Generate
-                        Schedule</a></button>
-                
                 <button type="submit">Submit</button>
                 <button type="reset"><a href="{% url 'clear' %}" class="btn btn-primary">Reset</a></button>
+                <button type="menu"><a href="{% url 'generate' %}" class="btn btn-primary">Generate
+                    Schedule</a></button>
                 {% else %}
 
                 <button type="submit">Submit</button>
