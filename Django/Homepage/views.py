@@ -96,20 +96,24 @@ def generate_schedule(request):
                 messages.error(request,"Unknown Error")
                 return homepage(request)
 
-        schedules=Distance.best_schedule(course_list)
+        try:
+            schedules=Distance.best_schedule(course_list)
+            best_schedule=schedules[0]
+            section_list=[]
+            for course in best_schedule.get_linked_sections():
+                linked_sections=''
+                for linked_section in course:
+                    linked_sections+=linked_section.get_name()+' '
 
-        best_schedule=schedules[0]
-        section_list=[]
-        for course in best_schedule.get_linked_sections():
-            linked_sections=''
-            for linked_section in course:
-                linked_sections+=linked_section.get_name()+' '
-
-            section_list.append(linked_sections)
+                section_list.append(linked_sections)
+            
+            
+            request.session['sections']=section_list
+            request.session['map_links']=MapsAPI.map_API_schedule(best_schedule)
+            request.session['days'] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        except:
+            messages.error(request,"No Schedule Found")
+            return homepage(request)
         
-        
-        request.session['sections']=section_list
-        request.session['map_links']=MapsAPI.map_API_schedule(best_schedule)
-        request.session['days'] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         
     return homepage(request)

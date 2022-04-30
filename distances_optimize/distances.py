@@ -157,8 +157,9 @@ class Distance:
 		#initialize indexes to first combination (0, 0, 0)
 		for i in range(n):
 			indexes.append(0)
-		
+		count = 0
 		while (1):
+			count+=1
 			schedule = [] 
 			#Append the courses given the index combination to generate a schedule
 			for i in range(n):
@@ -168,7 +169,7 @@ class Distance:
 			if (not(s.has_time_conflict())):
 				all_schedule.append(s)
 
-			if(len(all_schedule) >= 1000): break #cap at 1000 schedules
+			if(len(all_schedule) >= 1000 or count >= 50000): break #cap at 1000 schedules
 
 			#next is index of the last array
 			next = n - 1

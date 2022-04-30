@@ -65,7 +65,9 @@ class MapsAPI:
         labels = ["&markers=color:gray%7Clabel:1%7C","&markers=color:green%7Clabel:2%7C", "&markers=color:orange%7Clabel:3%7C", "&markers=color:purple%7Clabel:4%7C", "&markers=color:red%7Clabel:5%7C", "&markers=color:white%7Clabel:6%7C", "&markers=color:yellow%7Clabel:7%7C",  "&markers=color:black%7Clabel:8%7C",  "&markers=color:blue%7Clabel:9%7C"]
         for day in locations:
             markers = ""
+            print("new day")
             for j in range(len(day)):
+                print(day[j])
                 markers += labels[j] + day[j]
             if markers == "":
                 result.append("")
