@@ -4,6 +4,7 @@ import sys
 
 from django.shortcuts import render
 from numpy import size
+from django.contrib import messages
 
 sys.path.append(os.path.join(os.path.dirname(
     sys.path[0]), 'web_scraping'))
@@ -84,8 +85,16 @@ def generate_schedule(request):
     if 'classes' in request.session:
         course_list=[]
         for course in request.session['classes']:
-            course_list.append(Course(request.session['semester'], request.session['year'], course))
-            print(course_list[size(course_list)-1])
+            #try catch here for bad course num ValueError
+            try:
+                course_list.append(Course(request.session['semester'], request.session['year'], course))
+                print(course_list[size(course_list)-1])
+            except ValueError:
+                messages.error(request,"Invalid Course. Please Reset and try again.")
+                return homepage(request)
+            except:
+                messages.error(request,"Unknown Error")
+                return homepage(request)
 
         schedules=Distance.best_schedule(course_list)
 
