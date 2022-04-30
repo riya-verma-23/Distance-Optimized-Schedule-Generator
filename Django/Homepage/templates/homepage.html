@@ -26,7 +26,7 @@
 
     <section class="inputs" id="inputs">
         <div class="main">
-            <form action="." method="POST">
+            <form action="." method="POST" name="form1">
                 {% csrf_token %}
                 {% if semester is None %}
                 <div class="field">
@@ -43,7 +43,7 @@
                 <div class="field">
                     <div class="text-box">
                         <label for="Year">Year:</label>
-                        <input type="text" name="year" id="year" required onblur="yearValidation(this.value,event)" onkeypress="yearValidation(this.value,event)">
+                        <input type="number" name="year" id="year" required min="2004" max="2022" value="2022">
                     </div>
                 </div>
                 {% else %}
@@ -66,11 +66,18 @@
                     </div>
                 </div> -->
                 {% endif %}
-                <button type="submit">Submit</button>
-                <button type="reset"><a href="{% url 'clear' %}" class="btn btn-primary">Reset</a></button>
+
                 {% if classes %}
                 <button type="menu"><a href="{% url 'generate' %}" class="btn btn-primary">Generate
                         Schedule</a></button>
+                
+                <button type="submit">Submit</button>
+                <button type="reset"><a href="{% url 'clear' %}" class="btn btn-primary">Reset</a></button>
+                {% else %}
+
+                <button type="submit">Submit</button>
+                <button type="reset"><a href="{% url 'clear' %}" class="btn btn-primary">Reset</a></button>
+
                 {% endif %}
 
             </form>
@@ -162,30 +169,7 @@
             }
             slides[slideIndex - 1].style.display = "block";
             dots[slideIndex - 1].className += " active";
-        }
-// from stackexchange
-        function yearValidation(year,ev) {
-            var text = /^[0-9]+$/;
-            if(ev.type=="blur" || year.length==4 && ev.keyCode!=8 && ev.keyCode!=46) {
-                if (year != 0) {
-                    if ((year != "") && (!text.test(year))) {
-                        alert("Please Enter Numeric Values Only");
-                        return false;
-                    }
-
-                    if (year.length != 4) {
-                        alert("Year is not proper. Please check");
-                        return false;
-                    }
-                    var current_year=new Date().getFullYear();
-                    if((year < 1920) || (year > current_year)) {
-                        alert("Year should be in range 1920 to current year");
-                        return false;
-                    }
-                    return true;
-                } 
-            }
-        }
+        }        
     </script>
 
 </body>
