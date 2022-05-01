@@ -110,7 +110,6 @@ def generate_schedule(request):
             
             request.session['sections']=section_list
             request.session['map_links']=MapsAPI.map_API_schedule(best_schedule)
-            request.session['days'] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         except:
             messages.error(request,"No Schedule Found")
             return homepage(request)
