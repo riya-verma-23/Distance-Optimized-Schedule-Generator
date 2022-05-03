@@ -1,2 +1,5 @@
-# DISTANCE-OPTIMIZED SCHEDULE GENERATOR
-course-project-tyk-b created by GitHub Classroom
+# Distance-Optimized Schedule Generator
+(a) Summary of presentation introduction 
+(b) Describes technical architecture 
+(c) Provides reproducible installation instructions 
+(d) Group members and their roles
