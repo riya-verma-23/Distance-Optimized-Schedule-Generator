@@ -92,7 +92,10 @@ def generate_schedule(request):
             except ValueError:
                 messages.error(request,"Invalid Course. Please Reset and try again.")
                 return homepage(request)
-            except:
+            except ConnectionError:
+                messages.error(request,"Connection Error. Please try again in 15 minutes.")
+                return homepage(request)
+            except: 
                 messages.error(request,"Unknown Error")
                 return homepage(request)
 
