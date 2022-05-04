@@ -1,6 +1,7 @@
 import sys
 sys.path.insert(0, "web_scraping")
-sys.path.append('/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/schedule')
+sys.path.insert(0, 'schedule')
+
 from schedule import Schedule
 from course import Course
 from section import Section
