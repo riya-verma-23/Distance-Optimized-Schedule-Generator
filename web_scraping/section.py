@@ -6,6 +6,7 @@ import datetime
 
 class Section:
   # TODO: scrape from registration page for linked section (not major issue don't worry)
+  # TODO: check if part of location on course explorer is in one of the keys in dictionary
   '''
   Creates a Section object
   
@@ -27,7 +28,13 @@ class Section:
   '''
 
   addresses = {
-    'Pennsylvania Lounge Bld - PAR':'906 W College Ct, Urbana, IL 61801'
+    'Pennsylvania Lounge Bld - PAR':'906 W College Ct, Urbana, IL 61801',
+    'GYM3 Activities & Recreation Center':'201 E Peabody Dr, Champaign, IL 61820',
+    'Activities & Recreation Center':'201 E Peabody Dr, Champaign, IL 61820',
+    '100 Materials Science & Eng Bld':'1304 W Green St, Urbana, IL 61801',
+    '0023 Sidney Lu Mech Engr Bldg':'Mechanical Engineering Building, 1206 W Green St, Urbana, IL 61801',
+    '4074 Electrical & Computer Eng Bldg':'306 N Wright St, Urbana, IL 61801',
+    '1002 Electrical & Computer Eng Bldg':'306 N Wright St, Urbana, IL 61801'
   }
 
   # Initialize Section object given the section name, path to the section's xml file,
