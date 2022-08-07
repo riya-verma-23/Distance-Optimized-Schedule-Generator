@@ -29,7 +29,11 @@ The manage.py file can be used to control the Django server. To run the server y
 ```
 python manage.py runserver
 ```
+To run the front end, simply use
 
+```
+npm start
+```
 
 from within the virtual environment <sup>*</sup>
 
@@ -90,7 +94,7 @@ Make sure you run ```pipenv shell``` in the same directory as the Pipfile
 
 ### Nalin
 
-* Developed the frontend using UI mockups
+* Developed the old version of the frontend using UI mockups
 * Hosted Web server using Django 
 * Worked on integration allowing user input to be processed and passed into the relevant backend components
 * Wrote relevant CRUD operations to accept user input and display the schedule (as an interactive google maps iframe + table)
@@ -101,7 +105,8 @@ Make sure you run ```pipenv shell``` in the same directory as the Pipfile
 * Parsed the JSON matrix into sensible data structure (edit)
 * Wrote and optimized function to calculate score for each schedule option
 * Helped improve frontend design 
-* Worked on design doc
+* Worked on design doc to ensure backend communicates/interlinks smoothly
+* Redesigned the frontend of the project using React and Tailwind CSS framework.
 
 ### Sanya
 * Used Google Maps Static Map API to generate image used to display schedule
