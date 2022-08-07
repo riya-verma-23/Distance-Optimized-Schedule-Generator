@@ -28,7 +28,7 @@ class MapsAPI:
         for i in range(len(adjusted_locations)):
             markers += labels[i] + adjusted_locations[i]
         
-        return "https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers +"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA"
+        return "https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers +"&key=###"
 
     # generates maps APIs for given schedule
     # returns list of API calls for each days schedule
@@ -48,7 +48,7 @@ class MapsAPI:
             if markers == "":
                 result.append("")
             else:
-                result.append("https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers +"&key=AIzaSyAc9dakhO8Q9CagQjaxXhSOLHYk_Vt4hQA")
+                result.append("https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers +"&key=###")
         return result
 
 math241 = Course("spring", "2022", "MATH241" )
