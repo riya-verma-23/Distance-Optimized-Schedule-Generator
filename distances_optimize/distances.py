@@ -80,22 +80,22 @@ class Distance:
 
 	#Parses the JSON file generated and appends to a dictionary api_calls to keep track of distances
 	def append_dict_from_JSON(r, sections):
-					dist_str = r.json()["rows"][0]["elements"][0]["distance"]["text"]
-					if(dist_str.find("km") == -1):
-						num = re.findall('\d*\.?\d+',dist_str)
-						num = float(num[0])*0.001
-					else:
-						num = re.findall('\d*\.?\d+',dist_str)
-						num = float(num[0])
-					# #order tuple (sections[i], sections[j]) alphabetically
-					if (sections[0].get_location() < sections[1].get_location()):
-						key = (sections[0].get_location(), sections[1].get_location())
-					else:
-						key = (sections[1].get_location(), sections[0].get_location())
-					if key in Distance.api_calls: #finding the minimum distance between section A to section B and vice versa
-						if num < Distance.api_calls[key]:
-							Distance.api_calls[key] = num
-					else: Distance.api_calls[key] = num
+		dist_str = r.json()["rows"][0]["elements"][0]["distance"]["text"]
+		if(dist_str.find("km") == -1):
+			num = re.findall('\d*\.?\d+',dist_str)
+			num = float(num[0])*0.001
+		else:
+			num = re.findall('\d*\.?\d+',dist_str)
+			num = float(num[0])
+		# #order tuple (sections[i], sections[j]) alphabetically
+		if (sections[0].get_location() < sections[1].get_location()):
+			key = (sections[0].get_location(), sections[1].get_location())
+		else:
+			key = (sections[1].get_location(), sections[0].get_location())
+		if key in Distance.api_calls: #finding the minimum distance between section A to section B and vice versa
+			if num < Distance.api_calls[key]:
+				Distance.api_calls[key] = num
+		else: Distance.api_calls[key] = num
 
 	#wrapper function for distance_matrix_file and append_dict_from_JSON that calls API and appends to dictionary
 	def append_to_dictionary(sections_two):
@@ -146,11 +146,11 @@ class Distance:
 	#generates all valid schedule combinations without time conflicts by picking one linked section from each course
 	def generate_schedule_combinations(courses):
 		n = len(courses)
-
+		print("generate all schedules combinations called")
 		ll = []
 		for course in courses:
 			ll.append(course.get_linked_sections())
-	
+		print("linked l", ll)
 		all_schedule = [] #each schedule will be a set of linked sections, all schedules is all possible sets
 		indexes = []
 
@@ -224,11 +224,11 @@ class Distance:
 			if scores[i] == min:
 				best_schedule.append(all_schedules[i])
 		Distance.best = best_schedule
-		Distance.set_worst_schedule(all_schedules)
+		#Distance.set_worst_schedule(all_schedules)
 		Distance.write_to_api_json()
 	
 	def best_schedule(courses):
-		Distance.set_best_worst_schedule(courses)
+		#Distance.set_best_worst_schedule(courses)
 		return Distance.best
 	
 	def worst_schedule(courses):

@@ -1,0 +1,14 @@
+.button-center {
+  margin-right: 3%;
+  font-size: 13px;
+}
+.text-position {
+    transform: translateX(125%)
+}
+.course-list {
+  font-size: 16px;
+}
+
+.button-position {
+    transform: translateY(-120%)
+}

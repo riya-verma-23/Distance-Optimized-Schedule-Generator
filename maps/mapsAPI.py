@@ -1,10 +1,9 @@
 import os
 import sys
 sys.path.insert(0, "web_scraping")
-sys.path.insert(0, "schedule")
-# sys.path.append('/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/web_scraping')
-# sys.path.append('/Users/sanyasharma/Documents/UIUC/222/course-project-tyk-b/schedule')
-from schedule_class import Schedule
+sys.path.insert(0, 'schedule')
+
+from schedule import Schedule
 from course import Course
 from section import Section
 import requests 
@@ -74,3 +73,9 @@ class MapsAPI:
             else:
                 result.append("https://maps.googleapis.com/maps/api/staticmap?size=600x300" + markers +"&key="+api_key)
         return result
+
+# math241 = Course("spring", "2022", "MATH241" )
+# schedule =  Schedule(math241.get_linked_sections())
+# schedule_locations = schedule.return_locations()
+# print(MapsAPI.map_API_schedule(schedule_locations)[3])
+# print(schedule_locations)

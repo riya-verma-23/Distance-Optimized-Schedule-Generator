@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from django.contrib.messages import constants as messages
+import os
 
 
 MESSAGE_TAGS = {
@@ -38,22 +39,25 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Test_App',
-    'Homepage',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -66,7 +70,7 @@ ROOT_URLCONF = 'Distance_Optimized_Schedule_Generator.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates', ],
+        'DIRS': [ os.path.join(BASE_DIR, 'reactapp/build') ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,8 +134,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    os.path.join(BASE_DIR, 'reactapp/build/static'),
 ]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -141,3 +146,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Sessions Setting
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 10*60
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
+# CORS_ORIGIN_ALLOW_ALL = True  
+# CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+# CSRF_COOKIE_SECURE = True
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGIN_WHITELIST = (
+#         'http://localhost:3000',        
+# )
+# CORS_ALLOW_HEADERS = (
+#     'csrftoken',
+#     'content-type',
+#     'X-CSRFTOKEN'
+# )
+# CSRF_COOKIE_NAME = "csrftoken"
+# CSRF_HEADER_NAME = 'X-CSRFTOKEN'
