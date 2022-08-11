@@ -106,7 +106,8 @@ Make sure you run ```pipenv shell``` in the same directory as the Pipfile
 * Wrote and optimized function to calculate score for each schedule option
 * Helped improve frontend design 
 * Worked on design doc to ensure backend communicates/interlinks smoothly
-* Redesigned the frontend of the project using React and Tailwind CSS framework.
+* Redesigned the frontend of the project using React and Tailwind CSS framework
+* Integrated Django backend and React frontend with Django REST framework
 
 ### Sanya
 * Used Google Maps Static Map API to generate image used to display schedule
