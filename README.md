@@ -115,4 +115,7 @@ Make sure you run ```pipenv shell``` in the same directory as the Pipfile
 * Wrote the test suite for the Schedule and MapsAPI class
 * Worked on design doc and README.md
 
+## Frontend (Riya)
+![image](https://github.com/riya-verma-23/Distance-Optimized-Schedule-Generator/assets/69603424/0974f317-5b8c-4414-bdc2-e092fc1b903f)
+
 <!-- ![](resized.png?raw=true =200x200 ) -->
